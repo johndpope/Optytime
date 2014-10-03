@@ -10,4 +10,7 @@
 
 @interface OptytimeHomeViewController : UIViewController
 
+@property (strong, nonatomic) UIButton *menuButton;
+@property (strong, nonatomic) UIButton *addButton;
+
 @end

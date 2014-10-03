@@ -13,6 +13,10 @@
 		5D57A0A419DF09EC0013657C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5D57A0A219DF09EC0013657C /* Main.storyboard */; };
 		5D57A0A619DF09EC0013657C /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D57A0A519DF09EC0013657C /* Images.xcassets */; };
 		5D57A0B219DF09EC0013657C /* OptytimeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D57A0B119DF09EC0013657C /* OptytimeTests.m */; };
+		5D852A1519DF1F3C00E027DD /* SearchFieldView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D852A1419DF1F3C00E027DD /* SearchFieldView.m */; };
+		5D852A1A19DF227F00E027DD /* search@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D852A1919DF227F00E027DD /* search@2x.png */; };
+		5D852A1D19DF281D00E027DD /* add@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D852A1B19DF281D00E027DD /* add@2x.png */; };
+		5D852A1E19DF281D00E027DD /* menu@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D852A1C19DF281D00E027DD /* menu@2x.png */; };
 		5D95E02C19DF0F860097A285 /* DIDatepicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D95E02819DF0F860097A285 /* DIDatepicker.m */; };
 		5D95E02D19DF0F860097A285 /* DIDatepickerDateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D95E02A19DF0F860097A285 /* DIDatepickerDateView.m */; };
 /* End PBXBuildFile section */
@@ -40,6 +44,11 @@
 		5D57A0AB19DF09EC0013657C /* OptytimeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OptytimeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D57A0B019DF09EC0013657C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5D57A0B119DF09EC0013657C /* OptytimeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OptytimeTests.m; sourceTree = "<group>"; };
+		5D852A1319DF1F3C00E027DD /* SearchFieldView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchFieldView.h; sourceTree = "<group>"; };
+		5D852A1419DF1F3C00E027DD /* SearchFieldView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchFieldView.m; sourceTree = "<group>"; };
+		5D852A1919DF227F00E027DD /* search@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "search@2x.png"; sourceTree = "<group>"; };
+		5D852A1B19DF281D00E027DD /* add@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "add@2x.png"; sourceTree = "<group>"; };
+		5D852A1C19DF281D00E027DD /* menu@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu@2x.png"; sourceTree = "<group>"; };
 		5D95E02719DF0F860097A285 /* DIDatepicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DIDatepicker.h; sourceTree = "<group>"; };
 		5D95E02819DF0F860097A285 /* DIDatepicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DIDatepicker.m; sourceTree = "<group>"; };
 		5D95E02919DF0F860097A285 /* DIDatepickerDateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DIDatepickerDateView.h; sourceTree = "<group>"; };
@@ -94,7 +103,8 @@
 		5D57A09719DF09EC0013657C /* Optytime */ = {
 			isa = PBXGroup;
 			children = (
-				5D95E02419DF0F860097A285 /* Cells */,
+				5D852A1619DF221300E027DD /* Assets */,
+				5D852A0F19DF1B2E00E027DD /* Views */,
 				5D95E02519DF0F860097A285 /* Externals */,
 				5D95E02B19DF0F860097A285 /* Objects */,
 				5D357F5919DF0FEE00932655 /* Controllers */,
@@ -133,11 +143,23 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		5D95E02419DF0F860097A285 /* Cells */ = {
+		5D852A0F19DF1B2E00E027DD /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				5D852A1319DF1F3C00E027DD /* SearchFieldView.h */,
+				5D852A1419DF1F3C00E027DD /* SearchFieldView.m */,
 			);
-			path = Cells;
+			path = Views;
+			sourceTree = "<group>";
+		};
+		5D852A1619DF221300E027DD /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				5D852A1B19DF281D00E027DD /* add@2x.png */,
+				5D852A1C19DF281D00E027DD /* menu@2x.png */,
+				5D852A1919DF227F00E027DD /* search@2x.png */,
+			);
+			path = Assets;
 			sourceTree = "<group>";
 		};
 		5D95E02519DF0F860097A285 /* Externals */ = {
@@ -246,6 +268,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5D852A1D19DF281D00E027DD /* add@2x.png in Resources */,
+				5D852A1A19DF227F00E027DD /* search@2x.png in Resources */,
+				5D852A1E19DF281D00E027DD /* menu@2x.png in Resources */,
 				5D57A0A419DF09EC0013657C /* Main.storyboard in Resources */,
 				5D57A0A619DF09EC0013657C /* Images.xcassets in Resources */,
 			);
@@ -268,6 +293,7 @@
 				5D57A09E19DF09EC0013657C /* AppDelegate.m in Sources */,
 				5D57A09B19DF09EC0013657C /* main.m in Sources */,
 				5D95E02C19DF0F860097A285 /* DIDatepicker.m in Sources */,
+				5D852A1519DF1F3C00E027DD /* SearchFieldView.m in Sources */,
 				5D95E02D19DF0F860097A285 /* DIDatepickerDateView.m in Sources */,
 				5D357F5C19DF0FEE00932655 /* OptytimeHomeViewController.m in Sources */,
 			);
