@@ -4,7 +4,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "iCarousel.h"
 
 extern const NSTimeInterval kSecondsInDay;
 extern const CGFloat kDIDetepickerHeight;
@@ -15,6 +15,7 @@ extern const CGFloat kDIDetepickerHeight;
 // data
 @property (strong, nonatomic) NSArray *dates;
 @property (strong, nonatomic, readonly) NSDate *selectedDate;
+@property (strong, nonatomic) iCarousel *carousel;
 
 // UI
 @property (strong, nonatomic) UIColor *bottomLineColor;

@@ -7,10 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "iCarousel.h"
 
-@interface OptytimeHomeViewController : UIViewController
+@interface OptytimeHomeViewController : UIViewController <iCarouselDataSource, iCarouselDelegate>
 
 @property (strong, nonatomic) UIButton *menuButton;
 @property (strong, nonatomic) UIButton *addButton;
+@property (strong, nonatomic) NSMutableArray *eventsTimetableList;
+
+@property (weak, nonatomic) IBOutlet UIView *innerContainerView;
+@property (nonatomic, strong) IBOutlet iCarousel *carousel;
 
 @end

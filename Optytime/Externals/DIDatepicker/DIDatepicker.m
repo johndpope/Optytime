@@ -55,6 +55,7 @@ const CGFloat kDIDatepickerSpaceBetweenItems = 15.;
     [self updateDatesView];
 
     self.selectedDate = nil;
+    self.carousel = nil;
 }
 
 - (void)setSelectedDate:(NSDate *)selectedDate
@@ -243,6 +244,8 @@ const CGFloat kDIDatepickerSpaceBetweenItems = 15.;
 - (void)updateSelectedDate:(DIDatepickerDateView *)dateView
 {
     self.selectedDate = dateView.date;
+    NSInteger fooIndex = [self.dates indexOfObject:self.selectedDate];
+    [self.carousel scrollToItemAtIndex:fooIndex duration:0.1];
 }
 
 - (void)updateSelectedDatePosition

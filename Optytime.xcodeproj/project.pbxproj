@@ -19,6 +19,8 @@
 		5D852A1E19DF281D00E027DD /* menu@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D852A1C19DF281D00E027DD /* menu@2x.png */; };
 		5D95E02C19DF0F860097A285 /* DIDatepicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D95E02819DF0F860097A285 /* DIDatepicker.m */; };
 		5D95E02D19DF0F860097A285 /* DIDatepickerDateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D95E02A19DF0F860097A285 /* DIDatepickerDateView.m */; };
+		5DE0F40A19DF2F3100BE96BC /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DE0F40919DF2F3100BE96BC /* iCarousel.m */; };
+		5DE0F41019DF385500BE96BC /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DE0F40F19DF385500BE96BC /* Event.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +55,10 @@
 		5D95E02819DF0F860097A285 /* DIDatepicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DIDatepicker.m; sourceTree = "<group>"; };
 		5D95E02919DF0F860097A285 /* DIDatepickerDateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DIDatepickerDateView.h; sourceTree = "<group>"; };
 		5D95E02A19DF0F860097A285 /* DIDatepickerDateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DIDatepickerDateView.m; sourceTree = "<group>"; };
+		5DE0F40819DF2F3100BE96BC /* iCarousel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iCarousel.h; sourceTree = "<group>"; };
+		5DE0F40919DF2F3100BE96BC /* iCarousel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iCarousel.m; sourceTree = "<group>"; };
+		5DE0F40E19DF385500BE96BC /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
+		5DE0F40F19DF385500BE96BC /* Event.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Event.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -165,6 +171,7 @@
 		5D95E02519DF0F860097A285 /* Externals */ = {
 			isa = PBXGroup;
 			children = (
+				5DE0F40719DF2F3100BE96BC /* iCarousel */,
 				5D95E02619DF0F860097A285 /* DIDatepicker */,
 			);
 			path = Externals;
@@ -184,8 +191,19 @@
 		5D95E02B19DF0F860097A285 /* Objects */ = {
 			isa = PBXGroup;
 			children = (
+				5DE0F40E19DF385500BE96BC /* Event.h */,
+				5DE0F40F19DF385500BE96BC /* Event.m */,
 			);
 			path = Objects;
+			sourceTree = "<group>";
+		};
+		5DE0F40719DF2F3100BE96BC /* iCarousel */ = {
+			isa = PBXGroup;
+			children = (
+				5DE0F40819DF2F3100BE96BC /* iCarousel.h */,
+				5DE0F40919DF2F3100BE96BC /* iCarousel.m */,
+			);
+			path = iCarousel;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -294,7 +312,9 @@
 				5D57A09B19DF09EC0013657C /* main.m in Sources */,
 				5D95E02C19DF0F860097A285 /* DIDatepicker.m in Sources */,
 				5D852A1519DF1F3C00E027DD /* SearchFieldView.m in Sources */,
+				5DE0F41019DF385500BE96BC /* Event.m in Sources */,
 				5D95E02D19DF0F860097A285 /* DIDatepickerDateView.m in Sources */,
+				5DE0F40A19DF2F3100BE96BC /* iCarousel.m in Sources */,
 				5D357F5C19DF0FEE00932655 /* OptytimeHomeViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
