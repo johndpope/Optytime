@@ -1,5 +1,5 @@
 //
-//  ViewController.h
+//  OptytimeHomeViewController.h
 //  Optytime
 //
 //  Created by Alexey Khan on 03.10.14.
@@ -8,8 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
-
+@interface OptytimeHomeViewController : UIViewController
 
 @end
-
