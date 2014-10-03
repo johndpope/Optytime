@@ -37,6 +37,15 @@ const CGFloat kDIDatepickerSpaceBetweenItems = 15.;
     return self;
 }
 
+
+- (void)setDelegate:(id<DIDatepickerDelegate>)delegate
+{
+    if (_delegate != delegate)
+    {
+        _delegate = delegate;
+    }
+}
+
 - (void)setupViews
 {
     self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -72,6 +81,19 @@ const CGFloat kDIDatepickerSpaceBetweenItems = 15.;
     [self updateSelectedDatePosition];
 
     [self sendActionsForControlEvents:UIControlEventValueChanged];
+    
+#pragma mark -
+#pragma UPDforICarouselByAlexeyKhan
+    
+    //<!-- UPD by Alexey Khan -->//
+    id<DIDatepickerDelegate> strongDelegate = self.delegate;
+    
+    // Our delegate method is optional, so we should
+    // check that the delegate implements it
+    if ([strongDelegate respondsToSelector:@selector(diDatepicker:didChangeIndexTo:)]) {
+        NSInteger fooIndex = [self.dates indexOfObject:self.selectedDate];
+        [strongDelegate diDatepicker:self didChangeIndexTo:fooIndex];
+    }
 }
 
 - (UIScrollView *)datesScrollView

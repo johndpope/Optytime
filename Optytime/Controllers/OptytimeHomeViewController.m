@@ -7,7 +7,6 @@
 //
 
 #import "OptytimeHomeViewController.h"
-#import "DIDatepicker.h"
 #import "SearchFieldView.h"
 #import "Event.h"
 
@@ -59,6 +58,8 @@
      
      Я лишь сделал так, чтобы при свайпе вьюхи в сторону, соответственно менялся слайдер и в DIDatepicker. 
      А изначально первая вьюха и текущая дата синхронизируются.
+     
+     Сразу предупреждаю: в нижнем DIDatepicker ты просто не сможешь выбрать дату, которой нет, и stack overflow не случится, но поскольку у нас все синхронизируется, то оверфлоу может случиться в другом месте. Например, во вьюшках. Сейчас там их ограниченное число, а свайпать можно до бесконечности, поэтому поскольку подгрузки новых событий нет, мы долистаем до последней вьюхи, листнем еще - и у нас в DIDatepicker случится overflow. Так что внимательно.
      
      */
     
@@ -265,14 +266,26 @@
 - (UIView *)carousel:(iCarousel *)carousel placeholderViewAtIndex:(NSUInteger)index reusingView:(UIView *)view { return view; }
 
 // смена текущей даты в нижнем контроллере при свайпе вьюшек
+
+/*
+ // этот метод использовать нельзя, поскольку если мы захотим перелистнуть через несколько дней, индекс успеет поменяться несколько раз => если мы с 0 даты перепрыгиваем на 4-ю, то сначала карусель обновит индекс с 0 до 1, а вместе с этим и сам datepicker обновится с 4 до 1! поэтому каждый раз будет перелистываться только по 1 дню! поэтому использовать метод окончания скролла.
+ 
 - (void)carouselCurrentItemIndexDidChange:(iCarousel *)carousel {
-    
+ 
+ NSLog(@"Индекс текущей вьюшки в карусели: %li", carousel.currentItemIndex);
+ [self.datepicker selectDateAtIndex:carousel.currentItemIndex];
+
+}
+*/
+
+- (void)carouselDidEndDecelerating:(iCarousel *)carousel
+{
     NSLog(@"Индекс текущей вьюшки в карусели: %li", carousel.currentItemIndex);
     
     // поскольку изначально показывается 0-я вьюха, и подчеркнута в datepicker нулевая по счету дата в диапазоне
     // можно ставить такую же дату по индексу, как и индекс текущей вьюхи
     [self.datepicker selectDateAtIndex:carousel.currentItemIndex];
-    
+
 }
 
 - (CGFloat)carouselItemWidth:(iCarousel *)carousel {
@@ -331,15 +344,18 @@
     //self.selectedDateLabel.text = [formatter stringFromDate:self.datepicker.selectedDate];
     NSLog(@"Выбрали дату в нижнем контроллере: %@", [formatter stringFromDate:self.datepicker.selectedDate]);
     
-    NSInteger fooIndex = [self.datepicker.dates indexOfObject:self.datepicker.selectedDate];
-    NSLog(@"Выбранная дата имеет индекс: %li", fooIndex);
-    
-    //    [self.carousel scrollToItemAtIndex:fooIndex duration:0.1];
+}
+
+
+- (void)diDatepicker:(DIDatepicker*)datepicker didChangeIndexTo:(NSInteger)index
+{
+    [self.carousel scrollToItemAtIndex:index duration:0.8];
 }
 
 - (void)initDatepicker
 {
     [self.datepicker addTarget:self action:@selector(updateSelectedDate) forControlEvents:UIControlEventValueChanged];
+    self.datepicker.delegate = self;
     
     [self.datepicker setFrame:datepickerFrame];
 

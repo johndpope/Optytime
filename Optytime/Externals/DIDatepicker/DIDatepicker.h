@@ -9,8 +9,12 @@
 extern const NSTimeInterval kSecondsInDay;
 extern const CGFloat kDIDetepickerHeight;
 
+@protocol DIDatepickerDelegate;
 
 @interface DIDatepicker : UIControl
+
+//<!-- UPD by Alexey Khan -->//
+@property (nonatomic, weak) id<DIDatepickerDelegate> delegate;
 
 // data
 @property (strong, nonatomic) NSArray *dates;
@@ -29,5 +33,12 @@ extern const CGFloat kDIDetepickerHeight;
 - (void)fillCurrentYear;
 - (void)selectDate:(NSDate *)date;
 - (void)selectDateAtIndex:(NSUInteger)index;
+
+@end
+
+//<!-- UPD by Alexey Khan -->//
+@protocol DIDatepickerDelegate <NSObject>
+
+- (void)diDatepicker:(DIDatepicker*)datepicker didChangeIndexTo:(NSInteger)index;
 
 @end

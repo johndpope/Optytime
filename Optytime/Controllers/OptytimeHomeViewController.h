@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "iCarousel.h"
+#import "DIDatepicker.h"
 
-@interface OptytimeHomeViewController : UIViewController <iCarouselDataSource, iCarouselDelegate>
+@interface OptytimeHomeViewController : UIViewController <iCarouselDataSource, iCarouselDelegate, DIDatepickerDelegate>
 
 @property (strong, nonatomic) UIButton *menuButton;
 @property (strong, nonatomic) UIButton *addButton;
