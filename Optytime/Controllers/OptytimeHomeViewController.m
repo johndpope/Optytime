@@ -154,6 +154,9 @@
     searchInput.delegate = self;
     //[searchInput becomeFirstResponder];
     [searchInput addTarget:self action:@selector(textChanged:) forControlEvents:UIControlEventEditingChanged];
+    CGRect frameRect = searchInput.frame;
+    frameRect.size.height = self.searchfield.frame.size.height;
+    searchInput.frame = frameRect;
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
