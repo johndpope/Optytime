@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5D2949CE19E0604F0059B664 /* locationLeisure@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D2949CD19E0604F0059B664 /* locationLeisure@2x.png */; };
 		5D357F5C19DF0FEE00932655 /* OptytimeHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D357F5B19DF0FEE00932655 /* OptytimeHomeViewController.m */; };
 		5D57A09B19DF09EC0013657C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D57A09A19DF09EC0013657C /* main.m */; };
 		5D57A09E19DF09EC0013657C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D57A09D19DF09EC0013657C /* AppDelegate.m */; };
@@ -37,7 +38,6 @@
 		5DE0F41019DF385500BE96BC /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DE0F40F19DF385500BE96BC /* Event.m */; };
 		5DE0F41719DF672E00BE96BC /* EventCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5DE0F41619DF672E00BE96BC /* EventCellView.xib */; };
 		5DE0F41A19DF6A3000BE96BC /* EventTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DE0F41919DF6A3000BE96BC /* EventTableViewCell.m */; };
-		5DE0F41D19DF71AE00BE96BC /* LocationLeisure@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5DE0F41B19DF71AE00BE96BC /* LocationLeisure@2x.png */; };
 		5DE0F41E19DF71AE00BE96BC /* locationWork@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5DE0F41C19DF71AE00BE96BC /* locationWork@2x.png */; };
 /* End PBXBuildFile section */
 
@@ -52,6 +52,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5D2949CD19E0604F0059B664 /* locationLeisure@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "locationLeisure@2x.png"; sourceTree = "<group>"; };
 		5D357F5A19DF0FEE00932655 /* OptytimeHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptytimeHomeViewController.h; sourceTree = "<group>"; };
 		5D357F5B19DF0FEE00932655 /* OptytimeHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OptytimeHomeViewController.m; sourceTree = "<group>"; };
 		5D57A09519DF09EC0013657C /* Optytime.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Optytime.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -108,7 +109,6 @@
 		5DE0F41619DF672E00BE96BC /* EventCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EventCellView.xib; sourceTree = "<group>"; };
 		5DE0F41819DF6A3000BE96BC /* EventTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventTableViewCell.h; sourceTree = "<group>"; };
 		5DE0F41919DF6A3000BE96BC /* EventTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventTableViewCell.m; sourceTree = "<group>"; };
-		5DE0F41B19DF71AE00BE96BC /* LocationLeisure@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LocationLeisure@2x.png"; sourceTree = "<group>"; };
 		5DE0F41C19DF71AE00BE96BC /* locationWork@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "locationWork@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -215,8 +215,8 @@
 		5D852A1619DF221300E027DD /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				5D2949CD19E0604F0059B664 /* locationLeisure@2x.png */,
 				5DCA1A5719E0036A00C6584C /* pull@2x.png */,
-				5DE0F41B19DF71AE00BE96BC /* LocationLeisure@2x.png */,
 				5DE0F41C19DF71AE00BE96BC /* locationWork@2x.png */,
 				5D852A1B19DF281D00E027DD /* add@2x.png */,
 				5D852A1C19DF281D00E027DD /* menu@2x.png */,
@@ -395,10 +395,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				5D852A1D19DF281D00E027DD /* add@2x.png in Resources */,
-				5DE0F41D19DF71AE00BE96BC /* LocationLeisure@2x.png in Resources */,
 				5D852A1A19DF227F00E027DD /* search@2x.png in Resources */,
 				5D852A1E19DF281D00E027DD /* menu@2x.png in Resources */,
 				5DE0F41E19DF71AE00BE96BC /* locationWork@2x.png in Resources */,
+				5D2949CE19E0604F0059B664 /* locationLeisure@2x.png in Resources */,
 				5DE0F41719DF672E00BE96BC /* EventCellView.xib in Resources */,
 				5DCA1A5819E0036A00C6584C /* pull@2x.png in Resources */,
 				5D57A0A419DF09EC0013657C /* Main.storyboard in Resources */,

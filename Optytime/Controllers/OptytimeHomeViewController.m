@@ -89,10 +89,13 @@
     
     //<-- Инициализация выдвижного календаря -->//
     [self initCalendarView];
-    [self initCustomCalendar];
     
     //<-- Инициализация нижнего контроллера дат DIDatepicker -->//
     [self initDatepicker];
+    
+    [self initCustomCalendar];
+    
+    
 }
 
 #pragma mark -
@@ -206,7 +209,7 @@
 - (void)initInnerContainerView
 {
     ic_top_margin = searchfieldFrame.origin.y + searchfieldFrame.size.height + 6.0;
-    ic_height = screenSize.height - ic_top_margin - self.datepicker.frame.size.height - 6.0 - 13.0; // 13.0 - высота выступа выдвижного календаря
+    ic_height = screenSize.height - ic_top_margin - 60 - 10.0; // 10.0 - высота выступа выдвижного календаря
     innercontainerFrame = CGRectMake(0, ic_top_margin, screenSize.width, ic_height);
     
     [self.innerContainerView setFrame:innercontainerFrame];
@@ -482,7 +485,7 @@
     titleLabel.text = event.title;
     addressLabelSubtitle.text = event.location;
     addressLabelLocation.text = event.location;
-    driveTimeLabel.text = [NSString stringWithFormat:@"Drive Time: %i min", event.timeToLocation];
+    driveTimeLabel.text = [NSString stringWithFormat:@"Drive Time: %li min", event.timeToLocation];
     
     titleLabel.adjustsFontSizeToFitWidth = NO;
     addressLabelSubtitle.adjustsFontSizeToFitWidth = NO;
@@ -574,8 +577,8 @@
 {
     freeToSwipe = YES;
     calendarviewVisible = NO;
-    calendarViewHiddenHeight = 13.0;
-    calendarViewVisibleHeight = 380.0;
+    calendarViewHiddenHeight = 12.0;
+    calendarViewVisibleHeight = 340.0;
     cv_top_margin = ic_top_margin + ic_height + 6.0;
     cv_visible_top_margin = screenSize.height - datepickerFrame.size.height - calendarViewVisibleHeight;
     calendarViewHiddenFrame = CGRectMake(0, cv_top_margin, screenSize.width, calendarViewVisibleHeight);
@@ -586,21 +589,57 @@
     UIPanGestureRecognizer *swipe = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(toggleCalendarView:)];
     swipe.delegate = self;
     [self.calendarView addGestureRecognizer:swipe];
+    
 }
+
+#pragma mark -
+#pragma mark DIDatepicker
+
+- (void)updateSelectedDate
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.dateFormat = [NSDateFormatter dateFormatFromTemplate:@"EEEEddMMMM" options:0 locale:nil];
+    
+    //self.selectedDateLabel.text = [formatter stringFromDate:self.datepicker.selectedDate];
+    NSLog(@"Выбрали дату в нижнем контроллере: %@", [formatter stringFromDate:self.datepicker.selectedDate]);
+    
+}
+
+- (void)diDatepicker:(DIDatepicker*)datepicker didChangeIndexTo:(NSInteger)index
+{
+    [self.carousel scrollToItemAtIndex:index duration:0.8];
+}
+
+- (void)initDatepicker
+{
+    [self.datepicker addTarget:self action:@selector(updateSelectedDate) forControlEvents:UIControlEventValueChanged];
+    self.datepicker.delegate = self;
+    
+    datepickerHeight = 60.0;
+    datepickerFrame = CGRectMake(0, 0.0, screenSize.width, datepickerHeight);
+    [self.datepicker setFrame:datepickerFrame];
+    
+    //    [self.datepicker fillCurrentYear];
+    //    [self.datepicker fillCurrentMonth];
+    //    [self.datepicker fillCurrentWeek];
+    [self.datepicker fillDatesFromCurrentDate:7];
+    [self.datepicker selectDateAtIndex:current_date_index];
+}
+
+#pragma mark -
+#pragma mark - CustomCalendar
 
 - (void)initCustomCalendar
 {
     self.edgesForExtendedLayout = UIRectEdgeNone;
     self.automaticallyAdjustsScrollViewInsets = NO;
     
-    self.calendarView.backgroundColor = [UIColor colorWithWhite:0.8 alpha:1];
+    self.calendarView.backgroundColor = UIColor.whiteColor;
     [self.calendarView addSubview:self.customDatePickerView];
     
-    self.customDatePickerView.frame = CGRectMake(0, 20, self.datePickerView.frame.size.width, self.datePickerView.frame.size.height-180);
+    self.customDatePickerView.frame = CGRectMake(0, 60, self.datePickerView.frame.size.width, self.datePickerView.frame.size.height-180);
+    self.customDatePickerView.backgroundColor = UIColor.whiteColor;
 }
-
-#pragma mark -
-#pragma mark - customCalendarAccessors
 
 - (void)setCalendar:(NSCalendar *)calendar
 {
@@ -756,7 +795,7 @@
     
     if (translate.x > 0) translate.x = 0;
     
-    //NSLog(@"Translate.Y = %f; View Position Y = %f", translate.y, view.frame.origin.y);
+    NSLog(@"Translate.Y = %f; View Position Y = %f", translate.y, view.frame.origin.y);
     
     if (translate.y < 0 && calendarviewVisible == NO) {
         if (- translate.y < cv_top_margin)
@@ -778,7 +817,7 @@
         }
     }
     
-    float positionY = (translate.y < 0) ? (cv_top_margin + translate.y >= cv_visible_top_margin) ? cv_top_margin + translate.y : cv_visible_top_margin : (cv_visible_top_margin + translate.y <= datepickerFrame.origin.y) ? cv_visible_top_margin + translate.y : datepickerFrame.origin.y;
+    float positionY = (translate.y < 0) ? (cv_top_margin + translate.y >= cv_visible_top_margin) ? cv_top_margin + translate.y : cv_visible_top_margin : (cv_visible_top_margin + translate.y <= screenSize.height - datepickerHeight) ? cv_visible_top_margin + translate.y : screenSize.height - datepickerHeight;
     
     if (animate == YES) {
         
@@ -827,40 +866,6 @@
     }
 }
 
-#pragma mark -
-#pragma mark DIDatepicker
-
-- (void)updateSelectedDate
-{
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    formatter.dateFormat = [NSDateFormatter dateFormatFromTemplate:@"EEEEddMMMM" options:0 locale:nil];
-    
-    //self.selectedDateLabel.text = [formatter stringFromDate:self.datepicker.selectedDate];
-    NSLog(@"Выбрали дату в нижнем контроллере: %@", [formatter stringFromDate:self.datepicker.selectedDate]);
-    
-}
-
-- (void)diDatepicker:(DIDatepicker*)datepicker didChangeIndexTo:(NSInteger)index
-{
-    [self.carousel scrollToItemAtIndex:index duration:0.8];
-}
-
-- (void)initDatepicker
-{
-    [self.datepicker addTarget:self action:@selector(updateSelectedDate) forControlEvents:UIControlEventValueChanged];
-    self.datepicker.delegate = self;
-    
-    datepickerHeight = 60.0;
-    datepickerFrame = CGRectMake(0, screenSize.height - datepickerHeight, screenSize.width, datepickerHeight);
-    [self.datepicker setFrame:datepickerFrame];
-    
-    
-    //    [self.datepicker fillCurrentYear];
-    //    [self.datepicker fillCurrentMonth];
-    //    [self.datepicker fillCurrentWeek];
-    [self.datepicker fillDatesFromCurrentDate:7];
-    [self.datepicker selectDateAtIndex:current_date_index];
-}
 
 #pragma mark -
 #pragma mark DefaultPrecomposedCode
