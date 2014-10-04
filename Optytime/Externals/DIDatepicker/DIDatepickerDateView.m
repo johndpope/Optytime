@@ -52,15 +52,34 @@ const CGFloat kDIDatepickerSelectionLineWidth = 51.;
 
     NSMutableAttributedString *dateString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ %@\n%@", dayFormattedString, [dayInWeekFormattedString uppercaseString], monthFormattedString]];
 
+    
+#pragma mark -
+#pragma mark UPD by Alexey Khan
+    
+    // mark with blue color if @Today
+    NSDate *today = [NSDate date];
+    
+    unsigned int flags = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    
+    NSDateComponents* components_date = [calendar components:flags fromDate:date];
+    NSDate* dateOnly_date = [calendar dateFromComponents:components_date];
+    
+    NSDateComponents* components_today = [calendar components:flags fromDate:today];
+    NSDate* dateOnly_today = [calendar dateFromComponents:components_today];
+    
+    BOOL is_today = ([dateOnly_date compare:dateOnly_today] == NSOrderedSame) ? YES : NO;
+    UIColor *textColor = (is_today == YES) ? [UIColor blueColor] : [UIColor blackColor];
+    
     [dateString addAttributes:@{
                                 NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Thin" size:20],
-                                NSForegroundColorAttributeName: [UIColor blackColor]
+                                NSForegroundColorAttributeName: textColor
                                 }
                         range:NSMakeRange(0, dayFormattedString.length)];
-
+    
     [dateString addAttributes:@{
                                 NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Thin" size:8],
-                                NSForegroundColorAttributeName: [UIColor blackColor]
+                                NSForegroundColorAttributeName: textColor
                                 }
                         range:NSMakeRange(dayFormattedString.length + 1, dayInWeekFormattedString.length)];
 

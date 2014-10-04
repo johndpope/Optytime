@@ -71,6 +71,9 @@ const CGFloat kDIDatepickerSpaceBetweenItems = 15.;
 {
     _selectedDate = selectedDate;
     
+#pragma mark -
+#pragma mark - UPD by Alexey Khan
+    
     unsigned int flags = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
     NSCalendar *calendar = [NSCalendar currentCalendar];
     
@@ -80,8 +83,6 @@ const CGFloat kDIDatepickerSpaceBetweenItems = 15.;
         if ([subview isKindOfClass:[DIDatepickerDateView class]]) {
             DIDatepickerDateView *dateView = (DIDatepickerDateView *)subview;
             
-#pragma mark -
-#pragma mark - UPD by Alexey Khan
             // FUCKING HOLY MSITAKE DONE! I HATE YOU! WHO WROTE THIS FUCKING CODE?
             //dateView.isSelected = [dateView.date isEqualToDate:selectedDate];
             
