@@ -388,6 +388,9 @@
     
     EventTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     cell = (EventTableViewCell *)[[EventTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+    if (cell == nil) {
+        cell = (EventTableViewCell *)[[EventTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+    }
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.accessoryType = UITableViewCellAccessoryNone;
@@ -698,25 +701,6 @@
                          calendarviewVisible = NO;
                          [self setCalendarOnToday]; // возвращать указатель на сегодня
                      }];
-    
-    /*
-    unsigned int flags = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
-    NSCalendar* calendar = [NSCalendar currentCalendar];
-    NSDate *_newdate = [self.dateFormatter dateFromString:[self.dateFormatter stringFromDate:date]];
-    
-    for (NSDate *_date in self.datepicker.dates) {
-    
-        NSDateComponents* components_date = [calendar components:flags fromDate:_date];
-        NSDate* dateOnly_date = [calendar dateFromComponents:components_date];
-        
-        NSDateComponents* components_newdate = [calendar components:flags fromDate:_newdate];
-        NSDate* dateOnly_newdate = [calendar dateFromComponents:components_newdate];
-
-        if ([dateOnly_newdate compare:dateOnly_date]  == NSOrderedSame) {
-            NSLog(@"AYEEAAHHHH FUCKING HOLY SHIT I DID IT!");
-        }
-    }
-    */
 }
 
 #pragma mark - RSDFDatePickerViewDataSource
@@ -758,7 +742,7 @@
     
     if (translate.x > 0) translate.x = 0;
     
-    NSLog(@"Translate.Y = %f; View Position Y = %f", translate.y, view.frame.origin.y);
+    //NSLog(@"Translate.Y = %f; View Position Y = %f", translate.y, view.frame.origin.y);
     
     if (translate.y < 0 && calendarviewVisible == NO) {
         if (- translate.y < cv_top_margin)
