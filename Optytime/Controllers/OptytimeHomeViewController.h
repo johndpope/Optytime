@@ -16,6 +16,8 @@
 @property (strong, nonatomic) UIButton *addButton;
 @property (strong, nonatomic) NSMutableArray *eventsTimetableList;
 
+@property (strong, nonatomic) NSCalendar *calendar;
+
 @property (weak, nonatomic) IBOutlet UIView *innerContainerView;
 @property (nonatomic, strong) IBOutlet iCarousel *carousel;
 @property (strong, nonatomic) IBOutlet UIView *calendarView;

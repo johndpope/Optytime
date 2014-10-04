@@ -11,7 +11,9 @@
 #import "Event.h"
 #import "EventTableViewCell.h"
 
-@interface OptytimeHomeViewController () {
+#import "RSDFCustomDatePickerView.h"
+
+@interface OptytimeHomeViewController () <RSDFDatePickerViewDelegate, RSDFDatePickerViewDataSource> {
     CGSize  screenSize;
     CGRect  datepickerFrame,
             searchfieldFrame,
@@ -32,6 +34,12 @@
     BOOL    freeToSwipe,
             calendarviewVisible;
 }
+
+@property (strong, nonatomic) NSArray *datesToMark;
+@property (strong, nonatomic) NSDictionary *statesOfTasks;
+@property (strong, nonatomic) NSDateFormatter *dateFormatter;
+@property (strong, nonatomic) RSDFDatePickerView *datePickerView;
+@property (strong, nonatomic) RSDFCustomDatePickerView *customDatePickerView;
 
 @property (nonatomic, assign) BOOL wrap;
 
@@ -81,6 +89,7 @@
     
     //<-- Инициализация выдвижного календаря -->//
     [self initCalendarView];
+    [self initCustomCalendar];
     
     //<-- Инициализация нижнего контроллера дат DIDatepicker -->//
     [self initDatepicker];
@@ -505,6 +514,154 @@
     [self.calendarView addGestureRecognizer:swipe];
 }
 
+- (void)initCustomCalendar
+{
+    self.edgesForExtendedLayout = UIRectEdgeNone;
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    
+    self.calendarView.backgroundColor = [UIColor colorWithWhite:0.8 alpha:1];
+    [self.calendarView addSubview:self.customDatePickerView];
+    
+    self.customDatePickerView.frame = CGRectMake(0, 20, self.datePickerView.frame.size.width, self.datePickerView.frame.size.height-180);
+}
+
+#pragma mark - 
+#pragma mark - customCalendarAccessors
+
+- (void)setCalendar:(NSCalendar *)calendar
+{
+    if (![_calendar isEqual:calendar]) {
+        _calendar = calendar;
+        
+        self.title = [_calendar.calendarIdentifier capitalizedString];
+    }
+}
+
+- (void)setCalendarOnToday
+{
+    if (self.datePickerView.superview) {
+        [self.datePickerView scrollToToday:YES];
+    } else {
+        [self.customDatePickerView scrollToToday:YES];
+    }
+}
+
+- (NSArray *)datesToMark
+{
+    if (!_datesToMark) {
+        NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+        NSDateComponents *todayComponents = [calendar components:(NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit) fromDate:[NSDate date]];
+        NSDate *today = [calendar dateFromComponents:todayComponents];
+        
+        NSArray *numberOfDaysFromToday = @[@(-8), @(-2), @(-1), @(0), @(2), @(4), @(8), @(13), @(22)];
+        
+        NSDateComponents *dateComponents = [[NSDateComponents alloc] init];
+        NSMutableArray *datesToMark = [[NSMutableArray alloc] initWithCapacity:[numberOfDaysFromToday count]];
+        [numberOfDaysFromToday enumerateObjectsUsingBlock:^(NSNumber *numberOfDays, NSUInteger idx, BOOL *stop) {
+            dateComponents.day = [numberOfDays integerValue];
+            NSDate *date = [calendar dateByAddingComponents:dateComponents toDate:today options:0];
+            [datesToMark addObject:date];
+        }];
+        
+        _datesToMark = [datesToMark copy];
+    }
+    return _datesToMark;
+}
+
+- (NSDictionary *)statesOfTasks
+{
+    if (!_statesOfTasks) {
+        NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+        NSDateComponents *todayComponents = [calendar components:(NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit) fromDate:[NSDate date]];
+        NSDate *today = [calendar dateFromComponents:todayComponents];
+        
+        NSMutableDictionary *statesOfTasks = [[NSMutableDictionary alloc] initWithCapacity:[self.datesToMark count]];
+        [self.datesToMark enumerateObjectsUsingBlock:^(NSDate *date, NSUInteger idx, BOOL *stop) {
+            BOOL isCompletedAllTasks = NO;
+            if ([date compare:today] == NSOrderedAscending) {
+                isCompletedAllTasks = YES;
+            }
+            statesOfTasks[date] = @(isCompletedAllTasks);
+        }];
+        
+        _statesOfTasks = [statesOfTasks copy];
+    }
+    return _statesOfTasks;
+}
+
+- (NSDateFormatter *)dateFormatter
+{
+    if (!_dateFormatter) {
+        _dateFormatter = [[NSDateFormatter alloc] init];
+        [_dateFormatter setCalendar:self.calendar];
+        [_dateFormatter setLocale:[self.calendar locale]];
+        [_dateFormatter setDateStyle:NSDateFormatterFullStyle];
+    }
+    return _dateFormatter;
+}
+
+- (RSDFDatePickerView *)datePickerView
+{
+    if (!_datePickerView) {
+        _datePickerView = [[RSDFDatePickerView alloc] initWithFrame:self.view.bounds calendar:self.calendar];
+        _datePickerView.delegate = self;
+        _datePickerView.dataSource = self;
+        _datePickerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    }
+    return _datePickerView;
+}
+
+- (RSDFCustomDatePickerView *)customDatePickerView
+{
+    if (!_customDatePickerView) {
+        _customDatePickerView = [[RSDFCustomDatePickerView alloc] initWithFrame:self.view.bounds calendar:self.calendar];
+        _customDatePickerView.delegate = self;
+        _customDatePickerView.dataSource = self;
+        _customDatePickerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    }
+    return _customDatePickerView;
+}
+
+#pragma mark - RSDFDatePickerViewDelegate
+
+- (void)datePickerView:(RSDFDatePickerView *)view didSelectDate:(NSDate *)date
+{
+//    [[[UIAlertView alloc] initWithTitle:@"Picked Date" message:[self.dateFormatter stringFromDate:date] delegate:nil cancelButtonTitle:@":D" otherButtonTitles:nil] show];
+    
+    [self.datepicker selectDate:date];
+    
+    /*
+    unsigned int flags = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
+    NSCalendar* calendar = [NSCalendar currentCalendar];
+    NSDate *_newdate = [self.dateFormatter dateFromString:[self.dateFormatter stringFromDate:date]];
+    
+    for (NSDate *_date in self.datepicker.dates) {
+    
+        NSDateComponents* components_date = [calendar components:flags fromDate:_date];
+        NSDate* dateOnly_date = [calendar dateFromComponents:components_date];
+        
+        NSDateComponents* components_newdate = [calendar components:flags fromDate:_newdate];
+        NSDate* dateOnly_newdate = [calendar dateFromComponents:components_newdate];
+
+        if ([dateOnly_newdate compare:dateOnly_date]  == NSOrderedSame) {
+            NSLog(@"AYEEAAHHHH FUCKING HOLY SHIT I DID IT!");
+        }
+    }
+    */
+}
+
+#pragma mark - RSDFDatePickerViewDataSource
+
+- (BOOL)datePickerView:(RSDFDatePickerView *)view shouldMarkDate:(NSDate *)date
+{
+    return [self.datesToMark containsObject:date];
+}
+
+- (BOOL)datePickerView:(RSDFDatePickerView *)view isCompletedAllTasksOnDate:(NSDate *)date
+{
+    return [self.statesOfTasks[date] boolValue];
+}
+
 #pragma mark -
 #pragma mark calendarViewGesture
 
@@ -595,6 +752,7 @@
                                  completion:^(BOOL finished){
                                      freeToSwipe = YES;
                                      calendarviewVisible = NO;
+                                     [self setCalendarOnToday]; // возвращать указатель на сегодня
                                  }];
                 
             }

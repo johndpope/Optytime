@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "OptytimeHomeViewController.h"
 
 @interface AppDelegate ()
             
@@ -18,6 +19,17 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    
+    // ------------------
+    // Gregorian calendar
+    // ------------------
+    
+    /*
+    OptytimeHomeViewController *gregorianVC = [[OptytimeHomeViewController alloc] init];
+    gregorianVC.calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    gregorianVC.calendar.locale = [NSLocale currentLocale];
+    UINavigationController *gregorianNC = [[UINavigationController alloc] initWithRootViewController:gregorianVC];*/
+    
     return YES;
 }
 

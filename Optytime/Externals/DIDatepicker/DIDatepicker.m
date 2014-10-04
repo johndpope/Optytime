@@ -70,11 +70,30 @@ const CGFloat kDIDatepickerSpaceBetweenItems = 15.;
 - (void)setSelectedDate:(NSDate *)selectedDate
 {
     _selectedDate = selectedDate;
+    
+    unsigned int flags = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    
+    NSDate *found_date = nil;
 
     for (id subview in self.datesScrollView.subviews) {
         if ([subview isKindOfClass:[DIDatepickerDateView class]]) {
             DIDatepickerDateView *dateView = (DIDatepickerDateView *)subview;
-            dateView.isSelected = [dateView.date isEqualToDate:selectedDate];
+            
+#pragma mark -
+#pragma mark - UPD by Alexey Khan
+            // FUCKING HOLY MSITAKE DONE! I HATE YOU! WHO WROTE THIS FUCKING CODE?
+            //dateView.isSelected = [dateView.date isEqualToDate:selectedDate];
+            
+            // My version:
+            NSDateComponents* components_date = [calendar components:flags fromDate:dateView.date];
+            NSDate* dateOnly_date = [calendar dateFromComponents:components_date];
+            
+            NSDateComponents* components_newdate = [calendar components:flags fromDate:selectedDate];
+            NSDate* dateOnly_newdate = [calendar dateFromComponents:components_newdate];
+            
+            dateView.isSelected = ([dateOnly_date compare:dateOnly_newdate]  == NSOrderedSame) ? YES : NO;
+            if ([dateOnly_date compare:dateOnly_newdate]  == NSOrderedSame) found_date = dateView.date;
         }
     }
 
@@ -91,7 +110,7 @@ const CGFloat kDIDatepickerSpaceBetweenItems = 15.;
     // Our delegate method is optional, so we should
     // check that the delegate implements it
     if ([strongDelegate respondsToSelector:@selector(diDatepicker:didChangeIndexTo:)]) {
-        NSInteger fooIndex = [self.dates indexOfObject:self.selectedDate];
+        NSInteger fooIndex = [self.dates indexOfObject:found_date];
         [strongDelegate diDatepicker:self didChangeIndexTo:fooIndex];
     }
 }
@@ -215,7 +234,7 @@ const CGFloat kDIDatepickerSpaceBetweenItems = 15.;
 
 - (void)selectDate:(NSDate *)date
 {
-    NSAssert([self.dates indexOfObject:date] != NSNotFound, @"Date not found in dates array");
+    //NSAssert([self.dates indexOfObject:date] != NSNotFound, @"Date not found in dates array");
 
     self.selectedDate = date;
 }
