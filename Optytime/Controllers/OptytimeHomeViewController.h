@@ -10,7 +10,7 @@
 #import "iCarousel.h"
 #import "DIDatepicker.h"
 
-@interface OptytimeHomeViewController : UIViewController <iCarouselDataSource, iCarouselDelegate, DIDatepickerDelegate, UITableViewDataSource, UITableViewDelegate>
+@interface OptytimeHomeViewController : UIViewController <UIGestureRecognizerDelegate, iCarouselDataSource, iCarouselDelegate, DIDatepickerDelegate, UITableViewDataSource, UITableViewDelegate>
 
 @property (strong, nonatomic) UIButton *menuButton;
 @property (strong, nonatomic) UIButton *addButton;
@@ -18,5 +18,6 @@
 
 @property (weak, nonatomic) IBOutlet UIView *innerContainerView;
 @property (nonatomic, strong) IBOutlet iCarousel *carousel;
+@property (strong, nonatomic) IBOutlet UIView *calendarView;
 
 @end

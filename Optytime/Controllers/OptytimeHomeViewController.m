@@ -15,10 +15,22 @@
     CGSize  screenSize;
     CGRect  datepickerFrame,
             searchfieldFrame,
-            innercontainerFrame;
-    float   hDiff;
+            innercontainerFrame,
+            calendarViewHiddenFrame,
+            calendarViewVisibleFrame;
+    float   hDiff,
+            ic_top_margin,
+            ic_height,
+            calendarViewHiddenHeight,
+            calendarViewVisibleHeight,
+            cv_top_margin,
+            cv_visible_top_margin,
+            datepickerHeight;
     
-    int current_date_index;
+    int     current_date_index;
+    
+    BOOL    freeToSwipe,
+            calendarviewVisible;
 }
 
 @property (nonatomic, assign) BOOL wrap;
@@ -53,13 +65,6 @@
     
     //<-- Инициализация параметров контроллера -->//
     screenSize = [[UIScreen mainScreen] bounds].size;
-    datepickerFrame = CGRectMake(0, screenSize.height - 60, screenSize.width, 60);
-    searchfieldFrame = CGRectMake(0, 60, screenSize.width, 50);
-    current_date_index = 0; // индекс сегодняшнего дня в DIDatepicker -> какой по индексу день из выбранного диапазона подчеркнуть
-    
-    float ic_top_margin = searchfieldFrame.origin.y + searchfieldFrame.size.height + 6.0,
-    ic_height = screenSize.height - ic_top_margin - self.datepicker.frame.size.height - 6.0;
-    innercontainerFrame = CGRectMake(0, ic_top_margin, screenSize.width, ic_height);
     
     //<-- Инициализация кнопок топбара -->//
     [self setTopBarLeftButtonWithImage:[UIImage imageNamed:@"menu.png"]];
@@ -73,6 +78,9 @@
     [self setCarouselDefaults:self.carousel];
     [self setEvents];
     [self.carousel reloadData];
+    
+    //<-- Инициализация выдвижного календаря -->//
+    [self initCalendarView];
     
     //<-- Инициализация нижнего контроллера дат DIDatepicker -->//
     [self initDatepicker];
@@ -112,6 +120,8 @@
 
 - (void)initSearchFiledView
 {
+    searchfieldFrame = CGRectMake(0, 60, screenSize.width, 50);
+    current_date_index = 0; // индекс сегодняшнего дня в DIDatepicker -> какой по индексу день из выбранного диапазона подчеркнуть
     [self.searchfield setFrame:searchfieldFrame];
     
     CALayer *topBorder = [CALayer layer];
@@ -181,12 +191,15 @@
     }
 }
 
-
 #pragma mark -
 #pragma mark MainTableCarouselView
 
 - (void)initInnerContainerView
 {
+    ic_top_margin = searchfieldFrame.origin.y + searchfieldFrame.size.height + 6.0;
+    ic_height = screenSize.height - ic_top_margin - self.datepicker.frame.size.height - 6.0 - 13.0; // 13.0 - высота выступа выдвижного календаря
+    innercontainerFrame = CGRectMake(0, ic_top_margin, screenSize.width, ic_height);
+    
     [self.innerContainerView setFrame:innercontainerFrame];
     self.innerContainerView.clipsToBounds = YES;
 }
@@ -472,6 +485,124 @@
 }
 
 #pragma mark -
+#pragma mark RSDayFlowPicker
+
+- (void)initCalendarView
+{
+    freeToSwipe = YES;
+    calendarviewVisible = NO;
+    calendarViewHiddenHeight = 13.0;
+    calendarViewVisibleHeight = 380.0;
+    cv_top_margin = ic_top_margin + ic_height + 6.0;
+    cv_visible_top_margin = screenSize.height - datepickerFrame.size.height - calendarViewVisibleHeight;
+    calendarViewHiddenFrame = CGRectMake(0, cv_top_margin, screenSize.width, calendarViewVisibleHeight);
+    calendarViewVisibleFrame = CGRectMake(0, screenSize.height - calendarViewVisibleHeight - datepickerHeight, screenSize.width, calendarViewVisibleHeight);
+    
+    self.calendarView.frame = calendarViewHiddenFrame;
+    
+    UIPanGestureRecognizer *swipe = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(toggleCalendarView:)];
+    swipe.delegate = self;
+    [self.calendarView addGestureRecognizer:swipe];
+}
+
+#pragma mark -
+#pragma mark calendarViewGesture
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
+    if ([gestureRecognizer class] == [UIPanGestureRecognizer class]) {
+        UIPanGestureRecognizer *panGestureRec = (UIPanGestureRecognizer *)gestureRecognizer;
+        CGPoint point = [panGestureRec velocityInView:self.view];
+        
+        if (fabsf(point.y) > 2*fabsf(point.x) && freeToSwipe == YES) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+- (void)toggleCalendarView:(UIPanGestureRecognizer *)gesture {
+    
+    UIView *view = gesture.view; // ||---> calendarView
+    
+    BOOL animate = NO;
+    BOOL highSpeedSwipeToBottom = NO;
+    BOOL highSpeedSwipeToTop = NO;
+    
+    CGPoint translate = [gesture translationInView:view];
+    
+    if (translate.x > 0) translate.x = 0;
+    
+    NSLog(@"Translate.Y = %f; View Position Y = %f", translate.y, view.frame.origin.y);
+    
+    if (translate.y < 0 && calendarviewVisible == NO) {
+        if (- translate.y < cv_top_margin)
+            animate = YES;
+    }
+    else if (translate.y > 0 && calendarviewVisible == YES) {
+        if (translate.y < cv_top_margin)
+            animate = YES;
+    }
+    // too big velocity - too high speed of swiping
+    if (translate.y > 0 && calendarviewVisible == NO) {
+        if (view.frame.origin.y != calendarViewHiddenFrame.origin.y) {
+            highSpeedSwipeToBottom = YES;
+        }
+    }
+    else if (translate.y < 0 && calendarviewVisible == YES) {
+        if (view.frame.origin.y != calendarViewHiddenFrame.origin.y) {
+            highSpeedSwipeToTop = YES;
+        }
+    }
+    
+    float positionY = (translate.y < 0) ? (cv_top_margin + translate.y >= cv_visible_top_margin) ? cv_top_margin + translate.y : cv_visible_top_margin : (cv_visible_top_margin + translate.y <= datepickerFrame.origin.y) ? cv_visible_top_margin + translate.y : datepickerFrame.origin.y;
+    
+    if (animate == YES) {
+        
+        view.frame  = CGRectMake(
+                                 0,
+                                 positionY,
+                                 screenSize.width,
+                                 view.frame.size.height);
+        
+        if (gesture.state == UIGestureRecognizerStateCancelled ||
+            gesture.state == UIGestureRecognizerStateEnded ||
+            gesture.state == UIGestureRecognizerStateFailed)
+        {
+            
+            if (translate.y < 0.0 && calendarviewVisible == NO) {
+                
+                // swipe from the bottom to the top
+                freeToSwipe = NO;
+                
+                [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseOut
+                                 animations:^(void) {
+                                     view.frame = CGRectMake(0, cv_visible_top_margin, screenSize.width, calendarViewVisibleHeight);
+                                 }
+                                 completion:^(BOOL finished){
+                                     freeToSwipe = YES;
+                                     calendarviewVisible = YES;
+                                 }];
+            }
+            else if (translate.y > 0.0 && calendarviewVisible == YES) {
+                
+                // swipe from the top to the bottom
+                freeToSwipe = NO;
+                
+                [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseOut
+                                 animations:^(void) {
+                                     view.frame = CGRectMake(0, cv_top_margin, screenSize.width, calendarViewVisibleHeight);
+                                 }
+                                 completion:^(BOOL finished){
+                                     freeToSwipe = YES;
+                                     calendarviewVisible = NO;
+                                 }];
+                
+            }
+        }
+    }
+}
+
+#pragma mark -
 #pragma mark DIDatepicker
 
 - (void)updateSelectedDate
@@ -494,6 +625,8 @@
     [self.datepicker addTarget:self action:@selector(updateSelectedDate) forControlEvents:UIControlEventValueChanged];
     self.datepicker.delegate = self;
     
+    datepickerHeight = 60.0;
+    datepickerFrame = CGRectMake(0, screenSize.height - datepickerHeight, screenSize.width, datepickerHeight);
     [self.datepicker setFrame:datepickerFrame];
 
     

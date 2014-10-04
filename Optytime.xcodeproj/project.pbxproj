@@ -19,6 +19,7 @@
 		5D852A1E19DF281D00E027DD /* menu@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5D852A1C19DF281D00E027DD /* menu@2x.png */; };
 		5D95E02C19DF0F860097A285 /* DIDatepicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D95E02819DF0F860097A285 /* DIDatepicker.m */; };
 		5D95E02D19DF0F860097A285 /* DIDatepickerDateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5D95E02A19DF0F860097A285 /* DIDatepickerDateView.m */; };
+		5DCA1A5819E0036A00C6584C /* pull@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5DCA1A5719E0036A00C6584C /* pull@2x.png */; };
 		5DE0F40A19DF2F3100BE96BC /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DE0F40919DF2F3100BE96BC /* iCarousel.m */; };
 		5DE0F41019DF385500BE96BC /* Event.m in Sources */ = {isa = PBXBuildFile; fileRef = 5DE0F40F19DF385500BE96BC /* Event.m */; };
 		5DE0F41719DF672E00BE96BC /* EventCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5DE0F41619DF672E00BE96BC /* EventCellView.xib */; };
@@ -59,6 +60,7 @@
 		5D95E02819DF0F860097A285 /* DIDatepicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DIDatepicker.m; sourceTree = "<group>"; };
 		5D95E02919DF0F860097A285 /* DIDatepickerDateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DIDatepickerDateView.h; sourceTree = "<group>"; };
 		5D95E02A19DF0F860097A285 /* DIDatepickerDateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DIDatepickerDateView.m; sourceTree = "<group>"; };
+		5DCA1A5719E0036A00C6584C /* pull@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pull@2x.png"; sourceTree = "<group>"; };
 		5DE0F40819DF2F3100BE96BC /* iCarousel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iCarousel.h; sourceTree = "<group>"; };
 		5DE0F40919DF2F3100BE96BC /* iCarousel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = iCarousel.m; sourceTree = "<group>"; };
 		5DE0F40E19DF385500BE96BC /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
@@ -173,6 +175,7 @@
 		5D852A1619DF221300E027DD /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				5DCA1A5719E0036A00C6584C /* pull@2x.png */,
 				5DE0F41B19DF71AE00BE96BC /* LocationLeisure@2x.png */,
 				5DE0F41C19DF71AE00BE96BC /* locationWork@2x.png */,
 				5D852A1B19DF281D00E027DD /* add@2x.png */,
@@ -306,6 +309,7 @@
 				5D852A1E19DF281D00E027DD /* menu@2x.png in Resources */,
 				5DE0F41E19DF71AE00BE96BC /* locationWork@2x.png in Resources */,
 				5DE0F41719DF672E00BE96BC /* EventCellView.xib in Resources */,
+				5DCA1A5819E0036A00C6584C /* pull@2x.png in Resources */,
 				5D57A0A419DF09EC0013657C /* Main.storyboard in Resources */,
 				5D57A0A619DF09EC0013657C /* Images.xcassets in Resources */,
 			);
