@@ -139,10 +139,13 @@
     NSInteger _minutes;
     NSInteger _type_id;
     NSArray *_types;
+    NSArray *_locations;
     NSString *_type;
+    NSInteger _location_id;
     
     BOOL _hasNotification;
     NSString *_alertMessage;
+    NSString *_location;
     
     for (int i = 0; i < 11; i++) {
         
@@ -150,9 +153,14 @@
         _minutes = (arc4random() % 59) + 1;
         
         // random type generator
-        _type_id = (arc4random() % 2);
         _types = [NSArray arrayWithObjects:@"work", @"leisure", nil];
+        _type_id = (arc4random() % [_types count]);
         _type = [_types objectAtIndex:_type_id];
+        
+        // random location generator
+        _locations = [NSArray arrayWithObjects:@"Москва, Улица Пушкина, дом Колотушкина", @"Второе тупое название", @"", nil];
+        _location_id = (arc4random() % [_locations count]);
+        _location = [_locations objectAtIndex:_location_id];
         
         // random hasNotification generator
         _hasNotification = ((arc4random() % 2) == 0) ? YES : NO;
@@ -164,7 +172,7 @@
         [event setType:_type];
         [event setTitle:[NSString stringWithFormat:@"Idexed Event Title: %i", i]];
         [event setTimestamp:@"2014-10-25 19:25:00"]; //  у всех одна дата - так как тут единственно логичный способ - подгружать события по дате асинхронно, когда не известны, и выгружать из CoreData по match, когда события на эту дату уже записаны
-        [event setLocation:@"Москва, Улица Пушкина, дом Колотушкина"];
+        [event setLocation:_location];
         [event setTimeToLocation: _minutes];
         [event setHasNotification:_hasNotification];
         [event setAlertMessage:_alertMessage];
@@ -216,23 +224,6 @@
     // Create new view if no view is available for recycling
     if (view == nil)
     {
-        /*
-         // вариант с обычной UIView и label, который отображает выбранную дату
-        view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screenSize.width, carousel.frame.size.height)];
-        view.backgroundColor = UIColor.clearColor;
-        
-        innerTableView = [[UIView alloc] initWithFrame:view.frame];
-        innerTableView.backgroundColor = UIColor.whiteColor;
-        innerTableView.tag = 1;
-        [view addSubview:innerTableView];
-        
-        dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(14.0, screenSize.width + 5.0, screenSize.width - 86.0, 25.0)];
-        dateLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:15.0];
-        dateLabel.tag = 2;
-        [view addSubview:dateLabel];
-         */
-        // у всех остальных вьюшек поставить tag
-        
         view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screenSize.width, carousel.frame.size.height)];
         view.backgroundColor = UIColor.clearColor;
         
@@ -261,15 +252,6 @@
     formatter.dateFormat = [NSDateFormatter dateFormatFromTemplate:@"EEEEddMMMM" options:0 locale:nil];
     
     dateLabel.text = [formatter stringFromDate:self.datepicker.selectedDate];
-    
-    /*
-    UIPanGestureRecognizer *swipe = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(openBouquetViewer:)];
-    swipe.delegate = self;
-    [innerBouquetView addGestureRecognizer:swipe];
-    
-    UITapGestureRecognizer *tapGR = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openBouquetViewerByTap:)];
-    tapGR.numberOfTapsRequired = 1;
-    [innerBouquetView addGestureRecognizer:tapGR];*/
     
     return view;
 }
@@ -354,7 +336,10 @@
     Event *event = [[Event alloc] init];
     event = [eventsTimetableList objectAtIndex:indexPath.row];
     
-    if (event.hasNotification && [event.alertMessage isEqualToString:@""] == NO) {
+    if ([event.location isEqualToString:@""]) {
+        return 60.0;
+    }
+    else if (event.hasNotification && [event.alertMessage isEqualToString:@""] == NO) {
         return 160.0;
     }
     else return 110.0;
@@ -375,6 +360,13 @@
     
     Event *event = [[Event alloc] init];
     event = [eventsTimetableList objectAtIndex:indexPath.row];
+    
+    if ([event.location isEqualToString:@""]) {
+        // cell height = 60
+        // title label height = 18
+        cell.titleLabel.frame = CGRectMake(88.0, 21.0, 202.0, 18.0);
+    }
+    else cell.titleLabel.frame = CGRectMake(88.0, 11.0, 202.0, 18.0);
     
     cell.titleLabel.text = event.title;
     cell.addressLabelSubtitle.text = event.location;
@@ -414,6 +406,8 @@
     
     cell.locationImageView.tag = 1;
     cell.addressLabelLocation.tag = 2;
+    cell.notificationImageView.tag = 3;
+    cell.notificationLabel.tag = 4;
     
     UITapGestureRecognizer *tapOnImage = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(locationPushAction:)];
     tapOnImage.numberOfTapsRequired = 1;
@@ -424,6 +418,16 @@
     tapOnLabel.numberOfTapsRequired = 1;
     [cell.addressLabelLocation addGestureRecognizer:tapOnLabel];
     cell.addressLabelLocation.userInteractionEnabled = YES;
+    
+    UITapGestureRecognizer *tapOnNotificationImage = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(notificationPushAction:)];
+    tapOnNotificationImage.numberOfTapsRequired = 1;
+    [cell.notificationImageView addGestureRecognizer:tapOnNotificationImage];
+    cell.notificationImageView.userInteractionEnabled = YES;
+    
+    UITapGestureRecognizer *tapOnNotificationLabel = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(notificationPushAction:)];
+    tapOnNotificationLabel.numberOfTapsRequired = 1;
+    [cell.notificationLabel addGestureRecognizer:tapOnNotificationLabel];
+    cell.notificationLabel.userInteractionEnabled = YES;
     
     return cell;
 }
@@ -450,6 +454,22 @@
     NSLog(@"Current Event Location: %@, Drive Time: %li min", currEvent.location, currEvent.timeToLocation);
 }
 
+- (void)notificationPushAction:(UITapGestureRecognizer *)gesture
+{
+    // iOS 7 : view -> cell
+    EventTableViewCell *currCell = (EventTableViewCell *)gesture.view.superview;
+    
+    UITableView *tableview = (UITableView *)[self.carousel.currentItemView viewWithTag:1];
+    NSIndexPath *indexPath = [tableview indexPathForCell:currCell];
+    
+    Event *currEvent = [eventsTimetableList objectAtIndex:indexPath.row];
+    NSLog(@"IndexPath row: %li", indexPath.row);
+    
+    if (gesture.view.tag == 3) NSLog(@"Кликнули на картинку нотификейшена.");
+    else if (gesture.view.tag == 4) NSLog(@"Кликнули на текст нотификейшена.");
+    
+    NSLog(@"Current Event Location: %@, Drive Time: %li min", currEvent.location, currEvent.timeToLocation);
+}
 
 #pragma mark -
 #pragma mark DIDatepicker
