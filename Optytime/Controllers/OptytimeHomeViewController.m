@@ -210,7 +210,7 @@
 {
     ic_top_margin = searchfieldFrame.origin.y + searchfieldFrame.size.height + 6.0;
     ic_height = screenSize.height - ic_top_margin - 60 - 10.0; // 10.0 - высота выступа выдвижного календаря
-    innercontainerFrame = CGRectMake(0, ic_top_margin, screenSize.width, ic_height);
+    innercontainerFrame = CGRectMake(0, ic_top_margin, screenSize.width, ic_height); // если добавить + 6.0 - тень у нижнего контроллера будет выглядть естественно
     
     [self.innerContainerView setFrame:innercontainerFrame];
     self.innerContainerView.clipsToBounds = YES;
@@ -644,6 +644,11 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     
     self.calendarView.backgroundColor = UIColor.whiteColor;
+    CALayer *vl = self.calendarView.layer;
+    vl.shadowOpacity = 0.1f;
+    vl.shadowRadius = 4.0f;
+    vl.shadowColor = RGBA2UIColor(0, 0, 0, 1.0).CGColor;
+    
     [self.calendarView addSubview:self.customDatePickerView];
     
     self.customDatePickerView.frame = CGRectMake(0, 60, self.datePickerView.frame.size.width, self.datePickerView.frame.size.height-180);
