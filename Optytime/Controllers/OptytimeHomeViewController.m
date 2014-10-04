@@ -528,7 +528,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"didSelectRowAtIndexPath Row: %i", indexPath.row);
+    NSLog(@"didSelectRowAtIndexPath Row: %li", indexPath.row);
 }
 
 - (void)locationPushAction:(id)sender
@@ -536,7 +536,7 @@
     UIButton *buttonClicked = (UIButton *)sender;
     
     // iOS 8 : button -> contentView -> cell
-    EventTableViewCell *currCell = (EventTableViewCell *)buttonClicked.superview.superview;
+    EventTableViewCell *currCell = (EventTableViewCell *)buttonClicked.superview;
     NSString *className = [NSString stringWithFormat:@"%@", currCell.class];
     if ([className isEqualToString:@"EventTableViewCell"] == NO) {
         // iOS 7 : button -> contentView -> cellscrollview -> cell
@@ -546,7 +546,7 @@
     UITableView *tableview = (UITableView *)[self.carousel.currentItemView viewWithTag:1];
     NSIndexPath *indexPath = [tableview indexPathForCell:currCell];
     
-    NSLog(@"locationPushAction, row: %i", indexPath.row);
+    NSLog(@"locationPushAction, row: %li", indexPath.row);
 }
 
 - (void)notificationPushAction:(id)sender
@@ -554,7 +554,7 @@
     UIButton *buttonClicked = (UIButton *)sender;
     
     // iOS 8 : button -> contentView -> cell
-    EventTableViewCell *currCell = (EventTableViewCell *)buttonClicked.superview.superview;
+    EventTableViewCell *currCell = (EventTableViewCell *)buttonClicked.superview;
     NSString *className = [NSString stringWithFormat:@"%@", currCell.class];
     if ([className isEqualToString:@"EventTableViewCell"] == NO) {
         // iOS 7 : button -> contentView -> cellscrollview -> cell
@@ -564,7 +564,7 @@
     UITableView *tableview = (UITableView *)[self.carousel.currentItemView viewWithTag:1];
     NSIndexPath *indexPath = [tableview indexPathForCell:currCell];
     
-    NSLog(@"notificationPushAction, row: %i", indexPath.row);
+    NSLog(@"notificationPushAction, row: %li", indexPath.row);
 }
 
 #pragma mark -
