@@ -16,23 +16,23 @@
 @interface OptytimeHomeViewController () <RSDFDatePickerViewDelegate, RSDFDatePickerViewDataSource> {
     CGSize  screenSize;
     CGRect  datepickerFrame,
-            searchfieldFrame,
-            innercontainerFrame,
-            calendarViewHiddenFrame,
-            calendarViewVisibleFrame;
+    searchfieldFrame,
+    innercontainerFrame,
+    calendarViewHiddenFrame,
+    calendarViewVisibleFrame;
     float   hDiff,
-            ic_top_margin,
-            ic_height,
-            calendarViewHiddenHeight,
-            calendarViewVisibleHeight,
-            cv_top_margin,
-            cv_visible_top_margin,
-            datepickerHeight;
+    ic_top_margin,
+    ic_height,
+    calendarViewHiddenHeight,
+    calendarViewVisibleHeight,
+    cv_top_margin,
+    cv_visible_top_margin,
+    datepickerHeight;
     
     int     current_date_index;
     
     BOOL    freeToSwipe,
-            calendarviewVisible;
+    calendarviewVisible;
 }
 
 @property (strong, nonatomic) NSArray *datesToMark;
@@ -154,7 +154,7 @@
     // Retrieve all events
     
     eventsTimetableList = [[NSMutableArray alloc] init];
-
+    
     NSInteger _minutes;
     NSInteger _type_id;
     NSArray *_types;
@@ -196,7 +196,7 @@
         [event setHasNotification:_hasNotification];
         [event setAlertMessage:_alertMessage];
         [eventsTimetableList addObject:event];
-
+        
     }
 }
 
@@ -232,7 +232,7 @@
 
 - (NSUInteger)numberOfItemsInCarousel:(iCarousel *)carousel
 {
-
+    
     return [eventsTimetableList count];
 }
 
@@ -288,7 +288,7 @@
     // поскольку изначально показывается 0-я вьюха, и подчеркнута в datepicker нулевая по счету дата в диапазоне
     // можно ставить такую же дату по индексу, как и индекс текущей вьюхи
     [self.datepicker selectDateAtIndex:carousel.currentItemIndex];
-
+    
 }
 
 - (CGFloat)carouselItemWidth:(iCarousel *)carousel {
@@ -378,8 +378,8 @@
     UILabel *driveTimeLabel = nil;
     UILabel *notificationLabel = nil;
     
-//    UIImageView *locationImageView = nil;
-//    UIImageView *notificationImageView = nil;
+    //    UIImageView *locationImageView = nil;
+    //    UIImageView *notificationImageView = nil;
     
     UIView *verticalSeparatorView = nil;
     
@@ -407,7 +407,8 @@
     [buttonLocationText addTarget:self action:@selector(locationPushAction:) forControlEvents:UIControlEventTouchUpInside];
     buttonLocationText.backgroundColor = [UIColor clearColor];
     buttonLocationText.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-    [cell.contentView addSubview:buttonLocationText];
+    //    [cell.contentView addSubview:buttonLocationText];
+    [cell addSubview:buttonLocationText];
     
     UIButton *buttonNotificationText = [UIButton buttonWithType:UIButtonTypeCustom];
     buttonNotificationText.tag = 6;
@@ -415,7 +416,8 @@
     [buttonNotificationText addTarget:self action:@selector(notificationPushAction:) forControlEvents:UIControlEventTouchUpInside];
     buttonNotificationText.backgroundColor = [UIColor clearColor];
     buttonNotificationText.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-    [cell.contentView addSubview:buttonNotificationText];
+    //    [cell.contentView addSubview:buttonNotificationText];
+    [cell addSubview:buttonNotificationText];
     
     addressLabelLocation = [[UILabel alloc] initWithFrame:CGRectMake(105, 58, 195, 23)];
     notificationLabel = [[UILabel alloc] initWithFrame:CGRectMake(105, 112, 185, 40)];
@@ -430,30 +432,42 @@
     buttonLocationImage.frame = CGRectMake(57, 60, 40, 40);
     [buttonLocationImage addTarget:self action:@selector(locationPushAction:) forControlEvents:UIControlEventTouchUpInside];
     buttonLocationImage.backgroundColor = [UIColor clearColor];
-    [cell.contentView addSubview:buttonLocationImage];
+    //    [cell.contentView addSubview:buttonLocationImage];
+    [cell addSubview:buttonLocationImage];
     
     UIButton *buttonNotificationImage = [UIButton buttonWithType:UIButtonTypeCustom];
     buttonNotificationImage.tag = 8;
     buttonNotificationImage.frame = CGRectMake(57, 112, 40, 40);
     [buttonNotificationImage addTarget:self action:@selector(notificationPushAction:) forControlEvents:UIControlEventTouchUpInside];
     buttonNotificationImage.backgroundColor = [UIColor clearColor];
-    [cell.contentView addSubview:buttonNotificationImage];
-
+    //    [cell.contentView addSubview:buttonNotificationImage];
+    [cell addSubview:buttonNotificationImage];
     
-    [cell.contentView addSubview:timeLabel];
-    [cell.contentView addSubview:titleLabel];
-    [cell.contentView addSubview:addressLabelSubtitle];
-    [cell.contentView addSubview:addressLabelLocation];
-    [cell.contentView addSubview:driveTimeLabel];
-    [cell.contentView addSubview:notificationLabel];
-//    [cell.contentView addSubview:locationImageView];
-//    [cell.contentView addSubview:notificationImageView];
-    [cell.contentView addSubview:verticalSeparatorView];
+    /*
+     [cell.contentView addSubview:timeLabel];
+     [cell.contentView addSubview:titleLabel];
+     [cell.contentView addSubview:addressLabelSubtitle];
+     [cell.contentView addSubview:addressLabelLocation];
+     [cell.contentView addSubview:driveTimeLabel];
+     [cell.contentView addSubview:notificationLabel];
+     //    [cell.contentView addSubview:locationImageView];
+     //    [cell.contentView addSubview:notificationImageView];
+     [cell.contentView addSubview:verticalSeparatorView];*/
+    
+    [cell addSubview:timeLabel];
+    [cell addSubview:titleLabel];
+    [cell addSubview:addressLabelSubtitle];
+    [cell addSubview:addressLabelLocation];
+    [cell addSubview:driveTimeLabel];
+    [cell addSubview:notificationLabel];
+    //    [cell.contentView addSubview:locationImageView];
+    //    [cell.contentView addSubview:notificationImageView];
+    [cell addSubview:verticalSeparatorView];
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.accessoryType = UITableViewCellAccessoryNone;
     cell.clipsToBounds = YES;
-
+    
     
     if ([event.location isEqualToString:@""]) {
         // cell height = 60
@@ -468,7 +482,7 @@
     titleLabel.text = event.title;
     addressLabelSubtitle.text = event.location;
     addressLabelLocation.text = event.location;
-    driveTimeLabel.text = [NSString stringWithFormat:@"Drive Time: %li min", event.timeToLocation];
+    driveTimeLabel.text = [NSString stringWithFormat:@"Drive Time: %i min", event.timeToLocation];
     
     titleLabel.adjustsFontSizeToFitWidth = NO;
     addressLabelSubtitle.adjustsFontSizeToFitWidth = NO;
@@ -488,18 +502,18 @@
     
     timeLabel.text = time;
     addressLabelLocation.textColor = RGBA2UIColor(0, 0, 0, .8);
-
+    
     /*
-    if ([event.type isEqualToString:@"work"]) [locationImageView setImage:[UIImage imageNamed:@"locationWork.png"]];
-    else if ([event.type isEqualToString:@"leisure"]) [locationImageView setImage:[UIImage imageNamed:@"locationLeisure.png"]];
-    */
+     if ([event.type isEqualToString:@"work"]) [locationImageView setImage:[UIImage imageNamed:@"locationWork.png"]];
+     else if ([event.type isEqualToString:@"leisure"]) [locationImageView setImage:[UIImage imageNamed:@"locationLeisure.png"]];
+     */
     
     if ([event.type isEqualToString:@"work"]) {
-        [buttonLocationImage setImage:[UIImage imageNamed:@"locationWork.png"] forState:UIControlStateNormal];
+        [buttonLocationImage setBackgroundImage:[UIImage imageNamed:@"locationWork.png"] forState:UIControlStateNormal];
     }
-    else if ([event.type isEqualToString:@"leisure"]) [buttonLocationImage setImage:[UIImage imageNamed:@"locationLeisure.png"] forState:UIControlStateNormal];
+    else if ([event.type isEqualToString:@"leisure"]) [buttonLocationImage setBackgroundImage:[UIImage imageNamed:@"locationLeisure.png"] forState:UIControlStateNormal];
     
-    [buttonNotificationImage setImage:[UIImage imageNamed:@"locationWork.png"] forState:UIControlStateNormal];
+    [buttonNotificationImage setBackgroundImage:[UIImage imageNamed:@"locationWork.png"] forState:UIControlStateNormal];
     notificationLabel.text = event.alertMessage;
     
     verticalSeparatorView.backgroundColor = UIColor.redColor;
@@ -514,7 +528,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"didSelectRowAtIndexPath Row: %li", indexPath.row);
+    NSLog(@"didSelectRowAtIndexPath Row: %i", indexPath.row);
 }
 
 - (void)locationPushAction:(id)sender
@@ -532,7 +546,7 @@
     UITableView *tableview = (UITableView *)[self.carousel.currentItemView viewWithTag:1];
     NSIndexPath *indexPath = [tableview indexPathForCell:currCell];
     
-    NSLog(@"locationPushAction, row: %li", indexPath.row);
+    NSLog(@"locationPushAction, row: %i", indexPath.row);
 }
 
 - (void)notificationPushAction:(id)sender
@@ -549,8 +563,8 @@
     
     UITableView *tableview = (UITableView *)[self.carousel.currentItemView viewWithTag:1];
     NSIndexPath *indexPath = [tableview indexPathForCell:currCell];
-
-    NSLog(@"notificationPushAction, row: %li", indexPath.row);
+    
+    NSLog(@"notificationPushAction, row: %i", indexPath.row);
 }
 
 #pragma mark -
@@ -585,7 +599,7 @@
     self.customDatePickerView.frame = CGRectMake(0, 20, self.datePickerView.frame.size.width, self.datePickerView.frame.size.height-180);
 }
 
-#pragma mark - 
+#pragma mark -
 #pragma mark - customCalendarAccessors
 
 - (void)setCalendar:(NSCalendar *)calendar
@@ -686,10 +700,10 @@
 
 - (void)datePickerView:(RSDFDatePickerView *)view didSelectDate:(NSDate *)date
 {
-//    [[[UIAlertView alloc] initWithTitle:@"Picked Date" message:[self.dateFormatter stringFromDate:date] delegate:nil cancelButtonTitle:@":D" otherButtonTitles:nil] show];
+    //    [[[UIAlertView alloc] initWithTitle:@"Picked Date" message:[self.dateFormatter stringFromDate:date] delegate:nil cancelButtonTitle:@":D" otherButtonTitles:nil] show];
     
     [self.datepicker selectDate:date];
-
+    
     freeToSwipe = NO;
     
     [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseOut
@@ -839,7 +853,7 @@
     datepickerHeight = 60.0;
     datepickerFrame = CGRectMake(0, screenSize.height - datepickerHeight, screenSize.width, datepickerHeight);
     [self.datepicker setFrame:datepickerFrame];
-
+    
     
     //    [self.datepicker fillCurrentYear];
     //    [self.datepicker fillCurrentMonth];
@@ -858,14 +872,14 @@
 }
 
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+ {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 @end
