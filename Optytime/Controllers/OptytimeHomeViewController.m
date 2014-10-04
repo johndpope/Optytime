@@ -371,126 +371,183 @@
     
     static NSString *identifier = @"EventCell";
     
+    UILabel *timeLabel = nil;
+    UILabel *titleLabel = nil;
+    UILabel *addressLabelSubtitle = nil;
+    UILabel *addressLabelLocation = nil;
+    UILabel *driveTimeLabel = nil;
+    UILabel *notificationLabel = nil;
+    
+//    UIImageView *locationImageView = nil;
+//    UIImageView *notificationImageView = nil;
+    
+    UIView *verticalSeparatorView = nil;
+    
+    Event *event = [[Event alloc] init];
+    event = [eventsTimetableList objectAtIndex:indexPath.row];
+    
     EventTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-    if (cell == nil) {
-        cell = (EventTableViewCell *)[[EventTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
-    }
+    cell = (EventTableViewCell *)[[EventTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.accessoryType = UITableViewCellAccessoryNone;
     cell.clipsToBounds = YES;
     
-    Event *event = [[Event alloc] init];
-    event = [eventsTimetableList objectAtIndex:indexPath.row];
+    timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 8, 49, 24)]; timeLabel.tag = 1;
+    titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(88, 11, 202, 18)]; timeLabel.tag = 2;
+    addressLabelSubtitle = [[UILabel alloc] initWithFrame:CGRectMake(88, 31, 210, 18)]; timeLabel.tag = 3;
+    driveTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(105, 81, 195, 18)]; timeLabel.tag = 5;
+    
+    UIButton *buttonLocationText = [UIButton buttonWithType:UIButtonTypeCustom];
+    buttonLocationText.tag = 4;
+    buttonLocationText.frame = CGRectMake(105, 58, 195, 23);
+    [buttonLocationText addTarget:self action:@selector(locationPushAction:) forControlEvents:UIControlEventTouchUpInside];
+    buttonLocationText.backgroundColor = [UIColor clearColor];
+    buttonLocationText.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    [cell.contentView addSubview:buttonLocationText];
+    
+    UIButton *buttonNotificationText = [UIButton buttonWithType:UIButtonTypeCustom];
+    buttonNotificationText.tag = 6;
+    buttonNotificationText.frame = CGRectMake(105, 112, 185, 40);
+    [buttonNotificationText addTarget:self action:@selector(notificationPushAction:) forControlEvents:UIControlEventTouchUpInside];
+    buttonNotificationText.backgroundColor = [UIColor clearColor];
+    buttonNotificationText.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+    [cell.contentView addSubview:buttonNotificationText];
+    
+    addressLabelLocation = [[UILabel alloc] initWithFrame:CGRectMake(105, 58, 195, 23)];
+    notificationLabel = [[UILabel alloc] initWithFrame:CGRectMake(105, 112, 185, 40)];
+    
+    //locationImageView = [[UIImageView alloc] initWithFrame:CGRectMake(57, 60, 40, 40)]; timeLabel.tag = 7;
+    //notificationImageView = [[UIImageView alloc] initWithFrame:CGRectMake(57, 112, 40, 40)]; timeLabel.tag = 8;
+    
+    verticalSeparatorView = [[UIView alloc] initWithFrame:CGRectMake(76, 8, 2, 43)]; timeLabel.tag = 9;
+    
+    UIButton *buttonLocationImage = [UIButton buttonWithType:UIButtonTypeCustom];
+    buttonLocationImage.tag = 7;
+    buttonLocationImage.frame = CGRectMake(57, 60, 40, 40);
+    [buttonLocationImage addTarget:self action:@selector(locationPushAction:) forControlEvents:UIControlEventTouchUpInside];
+    buttonLocationImage.backgroundColor = [UIColor clearColor];
+    [cell.contentView addSubview:buttonLocationImage];
+    
+    UIButton *buttonNotificationImage = [UIButton buttonWithType:UIButtonTypeCustom];
+    buttonNotificationImage.tag = 8;
+    buttonNotificationImage.frame = CGRectMake(57, 112, 40, 40);
+    [buttonNotificationImage addTarget:self action:@selector(notificationPushAction:) forControlEvents:UIControlEventTouchUpInside];
+    buttonNotificationImage.backgroundColor = [UIColor clearColor];
+    [cell.contentView addSubview:buttonNotificationImage];
+
+    
+    [cell.contentView addSubview:timeLabel];
+    [cell.contentView addSubview:titleLabel];
+    [cell.contentView addSubview:addressLabelSubtitle];
+    [cell.contentView addSubview:addressLabelLocation];
+    [cell.contentView addSubview:driveTimeLabel];
+    [cell.contentView addSubview:notificationLabel];
+//    [cell.contentView addSubview:locationImageView];
+//    [cell.contentView addSubview:notificationImageView];
+    [cell.contentView addSubview:verticalSeparatorView];
+    
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.accessoryType = UITableViewCellAccessoryNone;
+    cell.clipsToBounds = YES;
+
     
     if ([event.location isEqualToString:@""]) {
         // cell height = 60
         // title label height = 18
-        cell.titleLabel.frame = CGRectMake(88.0, 21.0, 202.0, 18.0);
+        titleLabel.frame = CGRectMake(88.0, 21.0, 202.0, 18.0);
     }
-    else cell.titleLabel.frame = CGRectMake(88.0, 11.0, 202.0, 18.0);
+    else titleLabel.frame = CGRectMake(88.0, 11.0, 202.0, 18.0);
     
-    cell.titleLabel.text = event.title;
-    cell.addressLabelSubtitle.text = event.location;
-    cell.addressLabelLocation.text = event.location;
-    cell.driveTimeLabel.text = [NSString stringWithFormat:@"Drive Time: %li min", event.timeToLocation];
+    cell.userInteractionEnabled = YES;
+    cell.contentView.userInteractionEnabled = YES;
     
-    cell.titleLabel.adjustsFontSizeToFitWidth = NO;
-    cell.addressLabelSubtitle.adjustsFontSizeToFitWidth = NO;
-    cell.addressLabelLocation.adjustsFontSizeToFitWidth = NO;
-    cell.driveTimeLabel.adjustsFontSizeToFitWidth = NO;
+    titleLabel.text = event.title;
+    addressLabelSubtitle.text = event.location;
+    addressLabelLocation.text = event.location;
+    driveTimeLabel.text = [NSString stringWithFormat:@"Drive Time: %li min", event.timeToLocation];
     
-    cell.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:15.0];
-    cell.addressLabelSubtitle.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:15.0];
-    cell.addressLabelLocation.font = [UIFont fontWithName:@"HelveticaNeue" size:15.0];
-    cell.driveTimeLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:15.0];
-    cell.timeLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0];
-    cell.notificationLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:15.0];
+    titleLabel.adjustsFontSizeToFitWidth = NO;
+    addressLabelSubtitle.adjustsFontSizeToFitWidth = NO;
+    addressLabelLocation.adjustsFontSizeToFitWidth = NO;
+    driveTimeLabel.adjustsFontSizeToFitWidth = NO;
+    
+    titleLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:15.0];
+    addressLabelSubtitle.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:15.0];
+    addressLabelLocation.font = [UIFont fontWithName:@"HelveticaNeue" size:15.0];
+    
+    driveTimeLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:15.0];
+    timeLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0];
+    notificationLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:15.0];
     
     NSString *timestampTimePart = [event.timestamp componentsSeparatedByString:@" "][1];
     NSString *time = [NSString stringWithFormat:@"%@:%@", [timestampTimePart componentsSeparatedByString:@":"][0], [timestampTimePart componentsSeparatedByString:@":"][1]];
     
-    cell.timeLabel.text = time;
-    cell.addressLabelLocation.textColor = RGBA2UIColor(0, 0, 0, .8);
+    timeLabel.text = time;
+    addressLabelLocation.textColor = RGBA2UIColor(0, 0, 0, .8);
+
+    /*
+    if ([event.type isEqualToString:@"work"]) [locationImageView setImage:[UIImage imageNamed:@"locationWork.png"]];
+    else if ([event.type isEqualToString:@"leisure"]) [locationImageView setImage:[UIImage imageNamed:@"locationLeisure.png"]];
+    */
     
-    if ([event.type isEqualToString:@"work"]) [cell.locationImageView setImage:[UIImage imageNamed:@"locationWork.png"]];
-    else if ([event.type isEqualToString:@"leisure"]) [cell.locationImageView setImage:[UIImage imageNamed:@"locationLeisure.png"]];
+    if ([event.type isEqualToString:@"work"]) {
+        [buttonLocationImage setImage:[UIImage imageNamed:@"locationWork.png"] forState:UIControlStateNormal];
+    }
+    else if ([event.type isEqualToString:@"leisure"]) [buttonLocationImage setImage:[UIImage imageNamed:@"locationLeisure.png"] forState:UIControlStateNormal];
     
-    [cell.notificationImageView setImage:[UIImage imageNamed:@"locationWork.png"]];
-    cell.notificationLabel.text = event.alertMessage;
+    [buttonNotificationImage setImage:[UIImage imageNamed:@"locationWork.png"] forState:UIControlStateNormal];
+    notificationLabel.text = event.alertMessage;
     
-    cell.verticalSeparatorView.backgroundColor = UIColor.redColor;
-    CALayer *l = cell.verticalSeparatorView.layer;
+    verticalSeparatorView.backgroundColor = UIColor.redColor;
+    CALayer *l = verticalSeparatorView.layer;
     l.masksToBounds = YES;
     l.cornerRadius = 2;
     l.borderColor = UIColor.clearColor.CGColor;
     l.borderWidth = 0;
-    
-    cell.locationImageView.tag = 1;
-    cell.addressLabelLocation.tag = 2;
-    cell.notificationImageView.tag = 3;
-    cell.notificationLabel.tag = 4;
-    
-    UITapGestureRecognizer *tapOnImage = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(locationPushAction:)];
-    tapOnImage.numberOfTapsRequired = 1;
-    [cell.locationImageView addGestureRecognizer:tapOnImage];
-    cell.locationImageView.userInteractionEnabled = YES;
-    
-    UITapGestureRecognizer *tapOnLabel = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(locationPushAction:)];
-    tapOnLabel.numberOfTapsRequired = 1;
-    [cell.addressLabelLocation addGestureRecognizer:tapOnLabel];
-    cell.addressLabelLocation.userInteractionEnabled = YES;
-    
-    UITapGestureRecognizer *tapOnNotificationImage = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(notificationPushAction:)];
-    tapOnNotificationImage.numberOfTapsRequired = 1;
-    [cell.notificationImageView addGestureRecognizer:tapOnNotificationImage];
-    cell.notificationImageView.userInteractionEnabled = YES;
-    
-    UITapGestureRecognizer *tapOnNotificationLabel = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(notificationPushAction:)];
-    tapOnNotificationLabel.numberOfTapsRequired = 1;
-    [cell.notificationLabel addGestureRecognizer:tapOnNotificationLabel];
-    cell.notificationLabel.userInteractionEnabled = YES;
     
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"ячейка выделена, индекс ячейки: %li", indexPath.row);
+    NSLog(@"didSelectRowAtIndexPath Row: %li", indexPath.row);
 }
 
-- (void)locationPushAction:(UITapGestureRecognizer *)gesture
+- (void)locationPushAction:(id)sender
 {
-    // iOS 7 : view -> cell
-    EventTableViewCell *currCell = (EventTableViewCell *)gesture.view.superview;
+    UIButton *buttonClicked = (UIButton *)sender;
+    
+    // iOS 8 : button -> contentView -> cell
+    EventTableViewCell *currCell = (EventTableViewCell *)buttonClicked.superview.superview;
+    NSString *className = [NSString stringWithFormat:@"%@", currCell.class];
+    if ([className isEqualToString:@"EventTableViewCell"] == NO) {
+        // iOS 7 : button -> contentView -> cellscrollview -> cell
+        currCell = (EventTableViewCell *)buttonClicked.superview.superview.superview;
+    }
     
     UITableView *tableview = (UITableView *)[self.carousel.currentItemView viewWithTag:1];
     NSIndexPath *indexPath = [tableview indexPathForCell:currCell];
     
-    Event *currEvent = [eventsTimetableList objectAtIndex:indexPath.row];
-    NSLog(@"IndexPath row: %li", indexPath.row);
-    
-    if (gesture.view.tag == 1) NSLog(@"Кликнули на картинку локейшена.");
-    else if (gesture.view.tag == 2) NSLog(@"Кликнули на текст локейшена.");
-    
-    NSLog(@"Current Event Location: %@, Drive Time: %li min", currEvent.location, currEvent.timeToLocation);
+    NSLog(@"locationPushAction, row: %li", indexPath.row);
 }
 
-- (void)notificationPushAction:(UITapGestureRecognizer *)gesture
+- (void)notificationPushAction:(id)sender
 {
-    // iOS 7 : view -> cell
-    EventTableViewCell *currCell = (EventTableViewCell *)gesture.view.superview;
+    UIButton *buttonClicked = (UIButton *)sender;
+    
+    // iOS 8 : button -> contentView -> cell
+    EventTableViewCell *currCell = (EventTableViewCell *)buttonClicked.superview.superview;
+    NSString *className = [NSString stringWithFormat:@"%@", currCell.class];
+    if ([className isEqualToString:@"EventTableViewCell"] == NO) {
+        // iOS 7 : button -> contentView -> cellscrollview -> cell
+        currCell = (EventTableViewCell *)buttonClicked.superview.superview.superview;
+    }
     
     UITableView *tableview = (UITableView *)[self.carousel.currentItemView viewWithTag:1];
     NSIndexPath *indexPath = [tableview indexPathForCell:currCell];
-    
-    Event *currEvent = [eventsTimetableList objectAtIndex:indexPath.row];
-    NSLog(@"IndexPath row: %li", indexPath.row);
-    
-    if (gesture.view.tag == 3) NSLog(@"Кликнули на картинку нотификейшена.");
-    else if (gesture.view.tag == 4) NSLog(@"Кликнули на текст нотификейшена.");
-    
-    NSLog(@"Current Event Location: %@, Drive Time: %li min", currEvent.location, currEvent.timeToLocation);
+
+    NSLog(@"notificationPushAction, row: %li", indexPath.row);
 }
 
 #pragma mark -

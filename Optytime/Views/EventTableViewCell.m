@@ -10,7 +10,7 @@
 
 @implementation EventTableViewCell
 
-@synthesize timeLabel, titleLabel, addressLabelSubtitle, addressLabelLocation, driveTimeLabel, locationImageView;
+//@synthesize timeLabel, titleLabel, addressLabelSubtitle, addressLabelLocation, driveTimeLabel, locationImageView;
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
