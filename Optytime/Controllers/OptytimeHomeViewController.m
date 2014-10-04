@@ -619,6 +619,15 @@
     datepickerFrame = CGRectMake(0, 0.0, screenSize.width, datepickerHeight);
     [self.datepicker setFrame:datepickerFrame];
     
+    UIView *_polsunok = [[UIView alloc] initWithFrame:CGRectMake( (screenSize.width - 25.0)/2, 3.5, 25.0, 4.8)];
+    _polsunok.backgroundColor = RGBA2UIColor(0, 0, 0, .2);
+    CALayer *l = _polsunok.layer;
+    l.masksToBounds = YES;
+    l.cornerRadius = 3;
+    l.borderColor = UIColor.clearColor.CGColor;
+    l.borderWidth = .5;
+    [self.datepicker addSubview:_polsunok];
+    
     //    [self.datepicker fillCurrentYear];
     //    [self.datepicker fillCurrentMonth];
     //    [self.datepicker fillCurrentWeek];
