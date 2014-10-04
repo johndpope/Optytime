@@ -16,5 +16,8 @@
 @property (strong, nonatomic) IBOutlet UILabel *addressLabelLocation;
 @property (strong, nonatomic) IBOutlet UILabel *driveTimeLabel;
 @property (strong, nonatomic) IBOutlet UIImageView *locationImageView;
+@property (strong, nonatomic) IBOutlet UIView *verticalSeparatorView;
+@property (strong, nonatomic) IBOutlet UIImageView *notificationImageView;
+@property (strong, nonatomic) IBOutlet UILabel *notificationLabel;
 
 @end

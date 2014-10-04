@@ -156,7 +156,7 @@
         
         // random hasNotification generator
         _hasNotification = ((arc4random() % 2) == 0) ? YES : NO;
-        if (_hasNotification) _alertMessage = @"Чувак, это алерт!";
+        if (_hasNotification) _alertMessage = @"Чувак, это алерт! Глянька это событие, потому что там что-то зашибись какое важное и все такое, ну ты понимаешь.";
         else _alertMessage = @"";
         
         Event *event = [[Event alloc] init];
@@ -277,18 +277,6 @@
 - (UIView *)carousel:(iCarousel *)carousel placeholderViewAtIndex:(NSUInteger)index reusingView:(UIView *)view { return view; }
 
 // смена текущей даты в нижнем контроллере при свайпе вьюшек
-
-/*
- // этот метод использовать нельзя, поскольку если мы захотим перелистнуть через несколько дней, индекс успеет поменяться несколько раз => если мы с 0 даты перепрыгиваем на 4-ю, то сначала карусель обновит индекс с 0 до 1, а вместе с этим и сам datepicker обновится с 4 до 1! поэтому каждый раз будет перелистываться только по 1 дню! поэтому использовать метод окончания скролла.
- 
-- (void)carouselCurrentItemIndexDidChange:(iCarousel *)carousel {
- 
- NSLog(@"Индекс текущей вьюшки в карусели: %li", carousel.currentItemIndex);
- [self.datepicker selectDateAtIndex:carousel.currentItemIndex];
-
-}
-*/
-
 - (void)carouselDidEndDecelerating:(iCarousel *)carousel
 {
     NSLog(@"Индекс текущей вьюшки в карусели: %li", carousel.currentItemIndex);
@@ -344,8 +332,7 @@
     }
 }
 
-
-//* Table View *//
+//<!-- Table View Sources -->
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
@@ -364,7 +351,13 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 125.0;
+    Event *event = [[Event alloc] init];
+    event = [eventsTimetableList objectAtIndex:indexPath.row];
+    
+    if (event.hasNotification && [event.alertMessage isEqualToString:@""] == NO) {
+        return 160.0;
+    }
+    else return 110.0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -378,24 +371,59 @@
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.accessoryType = UITableViewCellAccessoryNone;
+    cell.clipsToBounds = YES;
     
     Event *event = [[Event alloc] init];
     event = [eventsTimetableList objectAtIndex:indexPath.row];
     
     cell.titleLabel.text = event.title;
-    cell.addressLabelLocation.text = event.location;
     cell.addressLabelSubtitle.text = event.location;
+    cell.addressLabelLocation.text = event.location;
     cell.driveTimeLabel.text = [NSString stringWithFormat:@"Drive Time: %li min", event.timeToLocation];
     
     cell.titleLabel.adjustsFontSizeToFitWidth = NO;
-    cell.addressLabelLocation.adjustsFontSizeToFitWidth = NO;
     cell.addressLabelSubtitle.adjustsFontSizeToFitWidth = NO;
+    cell.addressLabelLocation.adjustsFontSizeToFitWidth = NO;
     cell.driveTimeLabel.adjustsFontSizeToFitWidth = NO;
     
-    cell.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0];
-    cell.addressLabelLocation.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0];
-    cell.addressLabelSubtitle.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0];
-    cell.driveTimeLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0];
+    cell.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:15.0];
+    cell.addressLabelSubtitle.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:15.0];
+    cell.addressLabelLocation.font = [UIFont fontWithName:@"HelveticaNeue" size:15.0];
+    cell.driveTimeLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:15.0];
+    cell.timeLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0];
+    cell.notificationLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:15.0];
+    
+    NSString *timestampTimePart = [event.timestamp componentsSeparatedByString:@" "][1];
+    NSString *time = [NSString stringWithFormat:@"%@:%@", [timestampTimePart componentsSeparatedByString:@":"][0], [timestampTimePart componentsSeparatedByString:@":"][1]];
+    
+    cell.timeLabel.text = time;
+    cell.addressLabelLocation.textColor = RGBA2UIColor(0, 0, 0, .8);
+    
+    if ([event.type isEqualToString:@"work"]) [cell.locationImageView setImage:[UIImage imageNamed:@"locationWork.png"]];
+    else if ([event.type isEqualToString:@"leisure"]) [cell.locationImageView setImage:[UIImage imageNamed:@"locationLeisure.png"]];
+    
+    [cell.notificationImageView setImage:[UIImage imageNamed:@"locationWork.png"]];
+    cell.notificationLabel.text = event.alertMessage;
+    
+    cell.verticalSeparatorView.backgroundColor = UIColor.redColor;
+    CALayer *l = cell.verticalSeparatorView.layer;
+    l.masksToBounds = YES;
+    l.cornerRadius = 2;
+    l.borderColor = UIColor.clearColor.CGColor;
+    l.borderWidth = 0;
+    
+    cell.locationImageView.tag = 1;
+    cell.addressLabelLocation.tag = 2;
+    
+    UITapGestureRecognizer *tapOnImage = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(locationPushAction:)];
+    tapOnImage.numberOfTapsRequired = 1;
+    [cell.locationImageView addGestureRecognizer:tapOnImage];
+    cell.locationImageView.userInteractionEnabled = YES;
+    
+    UITapGestureRecognizer *tapOnLabel = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(locationPushAction:)];
+    tapOnLabel.numberOfTapsRequired = 1;
+    [cell.addressLabelLocation addGestureRecognizer:tapOnLabel];
+    cell.addressLabelLocation.userInteractionEnabled = YES;
     
     return cell;
 }
@@ -403,6 +431,23 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSLog(@"ячейка выделена, индекс ячейки: %li", indexPath.row);
+}
+
+- (void)locationPushAction:(UITapGestureRecognizer *)gesture
+{
+    // iOS 7 : view -> cell
+    EventTableViewCell *currCell = (EventTableViewCell *)gesture.view.superview;
+    
+    UITableView *tableview = (UITableView *)[self.carousel.currentItemView viewWithTag:1];
+    NSIndexPath *indexPath = [tableview indexPathForCell:currCell];
+    
+    Event *currEvent = [eventsTimetableList objectAtIndex:indexPath.row];
+    NSLog(@"IndexPath row: %li", indexPath.row);
+    
+    if (gesture.view.tag == 1) NSLog(@"Кликнули на картинку локейшена.");
+    else if (gesture.view.tag == 2) NSLog(@"Кликнули на текст локейшена.");
+    
+    NSLog(@"Current Event Location: %@, Drive Time: %li min", currEvent.location, currEvent.timeToLocation);
 }
 
 
