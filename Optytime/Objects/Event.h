@@ -25,8 +25,9 @@
     NSString *uid;
     NSString *type;
     NSString *timestamp;
+    NSString *title;
     NSString *location;
-    NSString *timeToLocation; // в минутах
+    NSInteger timeToLocation; // в минутах
     BOOL hasNotification;
     NSString *alertMessage;
 }
@@ -35,8 +36,9 @@
 - (NSString *)uid;
 - (NSString *)type;
 - (NSString *)timestamp;
+- (NSString *)title;
 - (NSString *)location;
-- (NSString *)timeToLocation;
+- (NSInteger)timeToLocation;
 - (BOOL)hasNotification;
 - (NSString *)alertMessage;
 
@@ -44,8 +46,9 @@
 - (void) setUid:(NSString *)_uid;
 - (void) setType:(NSString *)_type;
 - (void) setTimestamp:(NSString *)_timestamp;
+- (void) setTitle:(NSString *)_title;
 - (void) setLocation:(NSString *)_location;
-- (void) setTimeToLocation:(NSString *)_timeToLocation;
+- (void) setTimeToLocation:(NSInteger)_timeToLocation;
 - (void) setAlertMessage:(NSString *)_alertMessage;
 - (void) setHasNotification:(BOOL)_hasNotification;
 

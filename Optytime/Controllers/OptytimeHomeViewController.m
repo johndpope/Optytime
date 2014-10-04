@@ -9,6 +9,7 @@
 #import "OptytimeHomeViewController.h"
 #import "SearchFieldView.h"
 #import "Event.h"
+#import "EventTableViewCell.h"
 
 @interface OptytimeHomeViewController () {
     CGSize  screenSize;
@@ -49,20 +50,6 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
-    /*
-     
-     В данном контроллере заложены тестовые события: генерируются на лету рандомом из ограниченного количества вариантов.
-     Сортировки самих событий по датам нет, это уже логика, которую будете прописывать сами, как вам угодно - заправшивать 
-     события на каждый день, хранить их в Core Data и что еще придумаете - на ваше усмотрение.
-     
-     Я лишь сделал так, чтобы при свайпе вьюхи в сторону, соответственно менялся слайдер и в DIDatepicker. 
-     А изначально первая вьюха и текущая дата синхронизируются.
-     
-     Сразу предупреждаю: в нижнем DIDatepicker ты просто не сможешь выбрать дату, которой нет, и stack overflow не случится, но поскольку у нас все синхронизируется, то оверфлоу может случиться в другом месте. Например, во вьюшках. Сейчас там их ограниченное число, а свайпать можно до бесконечности, поэтому поскольку подгрузки новых событий нет, мы долистаем до последней вьюхи, листнем еще - и у нас в DIDatepicker случится overflow. Так что внимательно.
-     
-     */
-    
     
     //<-- Инициализация параметров контроллера -->//
     screenSize = [[UIScreen mainScreen] bounds].size;
@@ -164,7 +151,7 @@
         
         // random type generator
         _type_id = (arc4random() % 2);
-        _types = [NSArray arrayWithObjects:@"work", @"fun", nil];
+        _types = [NSArray arrayWithObjects:@"work", @"leisure", nil];
         _type = [_types objectAtIndex:_type_id];
         
         // random hasNotification generator
@@ -175,9 +162,10 @@
         Event *event = [[Event alloc] init];
         [event setUid: [NSString stringWithFormat:@"qwer%i", i]];
         [event setType:_type];
+        [event setTitle:[NSString stringWithFormat:@"Idexed Event Title: %i", i]];
         [event setTimestamp:@"2014-10-25 19:25:00"]; //  у всех одна дата - так как тут единственно логичный способ - подгружать события по дате асинхронно, когда не известны, и выгружать из CoreData по match, когда события на эту дату уже записаны
         [event setLocation:@"Москва, Улица Пушкина, дом Колотушкина"];
-        [event setTimeToLocation: [NSString stringWithFormat:@"%li", _minutes]];
+        [event setTimeToLocation: _minutes];
         [event setHasNotification:_hasNotification];
         [event setAlertMessage:_alertMessage];
         [eventsTimetableList addObject:event];
@@ -194,6 +182,7 @@
     [self.innerContainerView setFrame:innercontainerFrame];
     self.innerContainerView.clipsToBounds = YES;
 }
+
 - (void)setCarouselDefaults:(iCarousel *)carousel
 {
     self.wrap = YES;
@@ -211,14 +200,15 @@
     hDiff = 40;
 }
 
-- (NSUInteger)numberOfItemsInCarousel:(iCarousel *)carousel {
+- (NSUInteger)numberOfItemsInCarousel:(iCarousel *)carousel
+{
 
     return [eventsTimetableList count];
 }
 
 - (UIView *)carousel:(iCarousel *)carousel viewForItemAtIndex:(NSUInteger)index reusingView:(UIView *)view {
     
-    UIView *innerTableView = nil;
+    UITableView *innerTableView = nil;
     UILabel *dateLabel = nil;
     
     //Event *e = [eventsTimetableList objectAtIndex:index];
@@ -226,6 +216,8 @@
     // Create new view if no view is available for recycling
     if (view == nil)
     {
+        /*
+         // вариант с обычной UIView и label, который отображает выбранную дату
         view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screenSize.width, carousel.frame.size.height)];
         view.backgroundColor = UIColor.clearColor;
         
@@ -238,7 +230,26 @@
         dateLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:15.0];
         dateLabel.tag = 2;
         [view addSubview:dateLabel];
+         */
         // у всех остальных вьюшек поставить tag
+        
+        view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screenSize.width, carousel.frame.size.height)];
+        view.backgroundColor = UIColor.clearColor;
+        
+        innerTableView = [[UITableView alloc] initWithFrame:view.frame];
+        innerTableView.backgroundColor = UIColor.whiteColor;
+        innerTableView.tag = 1;
+        
+        innerTableView.dataSource = self;
+        innerTableView.delegate = self;
+        
+        innerTableView.separatorColor = RGBA2UIColor(0, 0, 0, .2);
+        innerTableView.separatorInset = UIEdgeInsetsZero;
+        
+        [innerTableView registerNib:[UINib nibWithNibName:@"EventCellView"
+                                                   bundle:nil] forCellReuseIdentifier:@"EventCell"];
+        
+        [view addSubview:innerTableView];
     }
     else
     {
@@ -333,6 +344,68 @@
     }
 }
 
+
+//* Table View *//
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
+    // здесь нужно указывать количество событий для конкретно текущего дня
+    return eventsTimetableList.count;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 0;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 125.0;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    static NSString *identifier = @"EventCell";
+    
+    EventTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    if (cell == nil) {
+        cell = (EventTableViewCell *)[[EventTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+    }
+    
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.accessoryType = UITableViewCellAccessoryNone;
+    
+    Event *event = [[Event alloc] init];
+    event = [eventsTimetableList objectAtIndex:indexPath.row];
+    
+    cell.titleLabel.text = event.title;
+    cell.addressLabelLocation.text = event.location;
+    cell.addressLabelSubtitle.text = event.location;
+    cell.driveTimeLabel.text = [NSString stringWithFormat:@"Drive Time: %li min", event.timeToLocation];
+    
+    cell.titleLabel.adjustsFontSizeToFitWidth = NO;
+    cell.addressLabelLocation.adjustsFontSizeToFitWidth = NO;
+    cell.addressLabelSubtitle.adjustsFontSizeToFitWidth = NO;
+    cell.driveTimeLabel.adjustsFontSizeToFitWidth = NO;
+    
+    cell.titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0];
+    cell.addressLabelLocation.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0];
+    cell.addressLabelSubtitle.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0];
+    cell.driveTimeLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0];
+    
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"ячейка выделена, индекс ячейки: %li", indexPath.row);
+}
+
+
 #pragma mark -
 #pragma mark DIDatepicker
 
@@ -345,7 +418,6 @@
     NSLog(@"Выбрали дату в нижнем контроллере: %@", [formatter stringFromDate:self.datepicker.selectedDate]);
     
 }
-
 
 - (void)diDatepicker:(DIDatepicker*)datepicker didChangeIndexTo:(NSInteger)index
 {
