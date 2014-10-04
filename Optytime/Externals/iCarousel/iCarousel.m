@@ -51,7 +51,7 @@
 #define SCROLL_DURATION 0.5
 #define INSERT_DURATION 0.4
 #define DECELERATE_THRESHOLD 0.1f
-#define SCROLL_SPEED_THRESHOLD 3.0f // ограничение по скорости свайпа для множественного сдвига
+#define SCROLL_SPEED_THRESHOLD 1.4f // ограничение по скорости свайпа для множественного сдвига
 #define SCROLL_DISTANCE_THRESHOLD 0.1f
 #define DECELERATION_MULTIPLIER 5.0f
 

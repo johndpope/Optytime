@@ -686,6 +686,18 @@
 //    [[[UIAlertView alloc] initWithTitle:@"Picked Date" message:[self.dateFormatter stringFromDate:date] delegate:nil cancelButtonTitle:@":D" otherButtonTitles:nil] show];
     
     [self.datepicker selectDate:date];
+
+    freeToSwipe = NO;
+    
+    [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseOut
+                     animations:^(void) {
+                         self.calendarView.frame = CGRectMake(0, cv_top_margin, screenSize.width, calendarViewVisibleHeight);
+                     }
+                     completion:^(BOOL finished){
+                         freeToSwipe = YES;
+                         calendarviewVisible = NO;
+                         [self setCalendarOnToday]; // возвращать указатель на сегодня
+                     }];
     
     /*
     unsigned int flags = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
