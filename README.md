@@ -10,11 +10,11 @@ OptytimeHomeViewController
 
 В классе iCarousel есть параметры для ограничения числа вьюшек, одновременно доступных для показа и прокрутки на экране. Там есть переменная MAX_VISIBLE_ITEMS -> сделал значение 365, как количество дней в году.
 
-  #ifdef ICAROUSEL_MACOS
+  `#ifdef ICAROUSEL_MACOS
   #define MAX_VISIBLE_ITEMS 365
   #else
   #define MAX_VISIBLE_ITEMS 365
-  #endif
+  #endif`
 
 При перелистывании вьюхи, соответственно меняется значение слайдера с датами DIDatepicker. 
 А изначально первая вьюха и текущая дата синхронизируются по индексу 0.
