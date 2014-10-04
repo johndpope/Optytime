@@ -10,6 +10,8 @@
 
 @implementation SearchFieldView
 
+@synthesize searchInput;
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];

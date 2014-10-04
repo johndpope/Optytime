@@ -398,11 +398,13 @@
     return nil;
 }
 
+#pragma mark -
+#pragma mark - UPD Alexey Khan
 - (UIImage *)completeMarkImage
 {
     UIImage *completeMarkImage = [self customCompleteMarkImage];
     if (!completeMarkImage) {
-        UIColor *completeMarkImageColor = [self completeMarkImageColor];
+        UIColor *completeMarkImageColor = UIColor.clearColor; //[self completeMarkImageColor];
         NSString *completeMarkImageKey = [NSString stringWithFormat:@"img_mark_%@", [completeMarkImageColor description]];
         completeMarkImage = [self ellipseImageWithKey:completeMarkImageKey frame:self.markImageView.frame color:completeMarkImageColor];
     }

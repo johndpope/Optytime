@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SearchFieldView : UIView
+@interface SearchFieldView : UIView  <UITextFieldDelegate>
+
+@property (weak, nonatomic) IBOutlet UITextField *searchInput;
 
 @end

@@ -54,7 +54,7 @@
 #define RGBA2UIColor(r,g,b,a) [UIColor colorWithRed:((r) / 255.0) green:((g) / 255.0) blue:((b) / 255.0) alpha:(a)]
 
 //<!-- Кнопки топбара -->//
-@synthesize menuButton, addButton;
+@synthesize menuButton, addButton, searchInput;
 @synthesize eventsTimetableList;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -147,7 +147,35 @@
     
     [self.searchfield.layer addSublayer:topBorder];
     [self.searchfield.layer addSublayer:bottomBorder];
+    
+    // search textfield
+    
+    [[UITextField appearance] setTintColor:RGBA2UIColor(0, 0, 0, 0.5)];
+    searchInput.delegate = self;
+    //[searchInput becomeFirstResponder];
+    [searchInput addTarget:self action:@selector(textChanged:) forControlEvents:UIControlEventEditingChanged];
 }
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self.searchInput resignFirstResponder];
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    return YES;
+}
+
+-(void)textChanged:(UITextField *)textField
+{
+    NSLog(@"Search Field: Text Changed!");
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{    
+    return YES;
+}
+
 
 #pragma mark -
 #pragma mark SetEvents
@@ -531,6 +559,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    // resign serachInput
+    [self.searchInput resignFirstResponder];
+    
     NSLog(@"didSelectRowAtIndexPath Row: %li", indexPath.row);
 }
 
